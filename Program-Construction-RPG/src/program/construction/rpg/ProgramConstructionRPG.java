@@ -165,7 +165,7 @@ public class ProgramConstructionRPG {
         } catch (IOException e) {
             System.out.println("Error reading from file ");
         }
-
+                int  mum =3;
     }
 
     private static void printArray() {
