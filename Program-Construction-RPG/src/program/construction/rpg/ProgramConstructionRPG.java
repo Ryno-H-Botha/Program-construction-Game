@@ -16,8 +16,8 @@ public class ProgramConstructionRPG {
     /**
      * @param args the command line arguments
      */
-    private static final int ROWS = 9;
-    private static final int COLS = 13;
+    public static int ROWS = Inialize_array.GetRows();
+    public static int COLS = Inialize_array.GetCols();
     public static int NewRow = ROWS / 2;
     public static int NewCol = COLS / 2;
     private static int currentRow;
@@ -27,12 +27,12 @@ public class ProgramConstructionRPG {
     public static String savefile = "./resources/Save.txt";
     public static String instfile = "./resources/Inst.txt";
     public static char[][] array = new char[ROWS][COLS];
-
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         HashMap<String, Integer> PlayerInfo = new HashMap();
         System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
         String start = scan.nextLine().toLowerCase();
+        Movement move = new Movement(currentRow,currentCol);
         boolean valid = false;
         int leavue = 0;
         switch (start) {
@@ -61,7 +61,7 @@ public class ProgramConstructionRPG {
         while (true) {
             System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
             char input = scan.next().charAt(0);
-
+        
             switch (input) {
                 case 'w'://move up
                     if (currentRow > 0) {
@@ -165,7 +165,6 @@ public class ProgramConstructionRPG {
         } catch (IOException e) {
             System.out.println("Error reading from file ");
         }
-                int  mum =3;
     }
 
     private static void printArray() {
