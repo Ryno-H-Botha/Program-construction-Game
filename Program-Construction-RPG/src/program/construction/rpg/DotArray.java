@@ -23,6 +23,8 @@ public class DotArray extends ProgramConstructionRPG{
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            moveUp();
+            moveDown();
             System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
             char input = scanner.next().charAt(0);
 

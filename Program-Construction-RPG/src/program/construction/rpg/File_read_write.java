@@ -21,7 +21,7 @@ public class File_read_write {
     public static int SavedRow;
     public static int SavedCol;
     public static int SavedPoints;
-   public void writeSave() {
+     public void writeSave() {
         try {
             PrintWriter OutScores = new PrintWriter(new FileOutputStream("./resources/Save.txt"));  //file write/genarator
             Set eSet = PlayerInfo.entrySet();
@@ -29,7 +29,10 @@ public class File_read_write {
                 while (it.hasNext()) {
                     OutScores.println(it.next());
                 }
-
+                
+            if (OutScores != null) {
+            OutScores.close();  
+            }
         } catch (FileNotFoundException e) {
             System.out.println("Error reading from file ");
         } catch (IOException e) {
@@ -53,6 +56,7 @@ public class File_read_write {
             } catch (IOException e) {
                 System.out.println("Error reading from file ");
             }
+            
         }
         public static void readSaveArrayFile() 
         {
@@ -60,7 +64,7 @@ public class File_read_write {
                 BufferedReader inStream = new BufferedReader(new FileReader("./resources/Save.txt"));
                 String InLine = inStream.readLine();
                 while (InLine != null) {
-                    String[] parts = InLine.split(" ");
+                    String[] parts = InLine.split("=");
                     PlayerInfo.put(parts[0],Integer.parseInt(parts[1]));
                     InLine = inStream.readLine();
                 }

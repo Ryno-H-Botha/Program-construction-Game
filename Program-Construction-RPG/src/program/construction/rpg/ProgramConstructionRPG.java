@@ -30,7 +30,7 @@ public class ProgramConstructionRPG {
         
         File_read_write NGame = new File_read_write();
         Scanner scan = new Scanner(System.in);
-        
+        public int moves = 0;
         System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
         String start = scan.nextLine().toLowerCase();
         Movement game = new Movement();
@@ -39,17 +39,19 @@ public class ProgramConstructionRPG {
         int leavue = 0;
         switch (start) {
             case "n":
+                    NGame.readSaveArrayFile();
                     cn.setPoints(0);
                     game.SetPostion(NewRow, NewCol);
-                    
+                    cn.generateCoins();
+                    game.printArray();
                 break;
             case "s":
                     NGame.readSaveArrayFile();
                     cn.setPoints(NGame.getSavedPoints());
                     int SavedRow = NGame.getSavedRows();
                     int SavedCol = NGame.getSavedCols();
-                    cn.generateCoins();
                     game.SetPostion(SavedRow,SavedCol);
+                    cn.generateCoins();
                     game.printArray();
                     
                 break;
@@ -60,10 +62,9 @@ public class ProgramConstructionRPG {
         }
 
         while (true) {
-            
             System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
             char input = scan.next().charAt(0);
-        
+            System.out.println("Points = "+cn.getPoints());
             switch (input) {
                 case 'w'://move up
                         cn.checkCoins('w');
@@ -93,6 +94,7 @@ public class ProgramConstructionRPG {
                 break;
             }
             game.printArray();
+
         }
         System.out.println("Save (S)\nDelete (D)");
         char SaveData = scan.next().charAt(0);
@@ -102,6 +104,9 @@ public class ProgramConstructionRPG {
         
         switch(SaveData){
             case 's':
+                NGame.setSavedRows(game.GetCurrentRow());
+                NGame.setSavedCols(game.GetCurrentCol());
+                NGame.setSavedPoints(cn.getPoints());
                 NGame.writeSave();
                 System.out.println("Data has been Saved.");
             break;

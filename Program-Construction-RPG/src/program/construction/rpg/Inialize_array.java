@@ -70,7 +70,6 @@ public class Inialize_array {
         if (!(c == '@')){
             array[NewRow][NewCol] = 'H';
         }
-
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 System.out.print(array[i][j] + " ");
