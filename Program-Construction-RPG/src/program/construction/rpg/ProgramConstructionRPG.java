@@ -26,33 +26,31 @@ public class ProgramConstructionRPG {
     public static char[][] array = new char[ROWS][COLS];
 
     public static void main(String[] args) {
-
-        File_read_write NGame = new File_read_write();
         Scanner scan = new Scanner(System.in);
-        Movement game = new Movement();
-        Coins cn = new Coins(game);
-        
-        int moves = 0;
-        int leavue = 0; 
-        
-        
+        File_read_write NGame = new File_read_write();
         NGame.readSaveArrayFile();
         
-        System.out.println ("New game     (n) \nSaved Game   (s) \nInstructions (I)");
-        char start = scan.next().charAt(0);
-            if(start == 'i') 
+        Movement game = new Movement();
+        int leavue = 0;
+        System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
+        String start = scan.nextLine().toLowerCase();
+        
+        
+        
+        Coins cn = new Coins(game);
+            if(start.equals("i")) 
             {
                 NGame.readInstArrayFile();
-                start = scan.next().charAt(0);
+                start = scan.nextLine().toLowerCase();
             }
         switch (start) {
-            case 'n':
+            case "n":
                 cn.setPoints(0);
                 game.SetPostion(NewRow, NewCol);
                 cn.generateCoins();
                 game.printArray();
                 break;
-            case 's':
+            case "s":
                 cn.setPoints(NGame.getSavedPoints());
                 int SavedRow = NGame.getSavedRows();
                 int SavedCol = NGame.getSavedCols();
@@ -62,9 +60,8 @@ public class ProgramConstructionRPG {
                 break;
         }
 
-
             while (true) {
-                System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
+            System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
             char input = scan.next().charAt(0);
             System.out.println("Points = " + cn.getPoints());
             switch (input) {

@@ -22,11 +22,7 @@ public class File_read_write {
     public static int SavedRow;
     public static int SavedCol;
     public static int SavedPoints;
-    public static HashMap<String, Integer> PlayerInfo = new HashMap<>() {{
-    put("Row", 0);
-    put("Col", 0);
-    put("Points", 0);
-}};
+    public static HashMap<String, Integer> PlayerInfo = new HashMap<>();
 
     public void writeSave() {
         try {
@@ -38,9 +34,9 @@ public class File_read_write {
             }
                 OutScores.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Error reading from file ");
+            System.out.println("Error writeing from file ");
         } catch (IOException e) {
-            System.out.println("Error reading from file ");
+            System.out.println("Error writeing from file ");
         }
     }
 
@@ -62,26 +58,26 @@ public class File_read_write {
         }
 
     }
-    public static void readSaveArrayFile() {
-    try {
-        BufferedReader inStream = new BufferedReader(new FileReader("./resources/Save.txt"));
-        String InLine;
-        while ((InLine = inStream.readLine()) != null) {
-            String[] parts = InLine.split("=");
-            if (parts.length == 2) {
-                PlayerInfo.replace(parts[0], Integer.parseInt(parts[1]));
+     public static void readSaveArrayFile() 
+        {
+            try {
+                BufferedReader inStream = new BufferedReader(new FileReader("./resources/Save.txt"));
+                String InLine = inStream.readLine();
+                while (InLine != null) {
+                    String[] parts = InLine.split("=");
+                    PlayerInfo.put(parts[0],Integer.parseInt(parts[1]));
+                    InLine = inStream.readLine();
+                }
+                SavedRow = PlayerInfo.get("Row");
+                SavedCol = PlayerInfo.get("Col");
+                SavedPoints = PlayerInfo.get("Points");
+                inStream.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("Error reading from file ");
+            } catch (IOException e) {
+                System.out.println("Error reading from file ");
             }
         }
-        SavedRow = PlayerInfo.get("Row");
-        SavedCol = PlayerInfo.get("Col");
-        SavedPoints = PlayerInfo.get("Points");
-        inStream.close();
-    } catch (FileNotFoundException e) {
-        System.out.println("Error reading from file ");
-    } catch (IOException e) {
-        System.out.println("Error reading from file ");
-    }
-}
 
     public static int getSavedRows() {
         return SavedRow;
@@ -96,18 +92,18 @@ public class File_read_write {
     }
 
     public void setSavedRows(int Rows) {
-        PlayerInfo.replace("Points", Rows);
+        PlayerInfo.put("Points", Rows);
     }
 
     public void setSavedCols(int Cols) {
 
-        PlayerInfo.replace("Points", Cols);
+        PlayerInfo.put("Points", Cols);
 
     }
 
     public void setSavedPoints(int Points) {
 
-        PlayerInfo.replace("Points", Points);
+        PlayerInfo.put("Points", Points);
 
     }
 }

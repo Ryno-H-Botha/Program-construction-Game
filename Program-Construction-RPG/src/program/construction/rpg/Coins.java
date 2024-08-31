@@ -10,6 +10,7 @@ import java.util.Random;
  */
 public class Coins {
     public int Points;
+    public int CoinCount;
     private Movement game;
     public Coins(Movement game)
     {
@@ -23,13 +24,21 @@ public class Coins {
     {
         this.Points = Points;
     }
+    public int getCoinCount()
+    {
+        return this.CoinCount;
+    }
+    public void setCoinCounts(int CoinCount)
+    {
+        this.CoinCount = CoinCount;
+    }
    public void generateCoins()
    {
         
         Random rand = new Random();
-        int numberOfCoins = rand.nextInt(9)+1;//so zero wont ever appear
+        CoinCount = rand.nextInt(9)+1;//so zero wont ever appear
         int coinsPlaced = 0;
-        while (coinsPlaced < numberOfCoins) {
+        while (coinsPlaced < CoinCount) {
             int row = rand.nextInt(game.ROWS);
             int col = rand.nextInt(game.COLS);
             // Place a coin if the spot is empty
@@ -71,10 +80,4 @@ public class Coins {
                     break;
             }
     }
-    
-    
-    
-    
-    
-    
 }
