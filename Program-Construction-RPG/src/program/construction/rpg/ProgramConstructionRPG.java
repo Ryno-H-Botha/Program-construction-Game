@@ -16,8 +16,8 @@ public class ProgramConstructionRPG {
     /**
      * @param args the command line arguments
      */
-    public static int ROWS = Inialize_array.GetRows();
-    public static int COLS = Inialize_array.GetCols();
+    public static int ROWS = Inialize_array.getRows();
+    public static int COLS = Inialize_array.getCols();
     public static int NewRow = ROWS / 2;
     public static int NewCol = COLS / 2;
     public static String inputfile = "./resources/input.txt";
@@ -28,16 +28,17 @@ public class ProgramConstructionRPG {
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         File_read_write NGame = new File_read_write();
-        NGame.readSaveArrayFile();
-        
         Movement game = new Movement();
+        Coins cn = new Coins(game);
+        Levels level = new Levels(game,cn);
+        NGame.readSaveArrayFile();
         int leavue = 0;
         System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
         String start = scan.nextLine().toLowerCase();
         
         
         
-        Coins cn = new Coins(game);
+        
             if(start.equals("i")) 
             {
                 NGame.readInstArrayFile();
@@ -52,18 +53,21 @@ public class ProgramConstructionRPG {
                 break;
             case "s":
                 cn.setPoints(NGame.getSavedPoints());
+                level.setLevels(NGame.getSavedLevels());
+                level.setLevels(NGame.getSavedLevels());
                 int SavedRow = NGame.getSavedRows();
-                int SavedCol = NGame.getSavedCols();
+                int SavedCol = NGame.getSavedCols();   
+                game.setMovesCount(NGame.getSavedMovesCount());
                 game.SetPostion(SavedRow, SavedCol);
-                NGame.setCoins(game);
+                NGame.setArrayCoins(game,cn);
                 game.printArray();
                 break;
         }
 
             while (true) {
-            System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
+            System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit Then press Enter to confiem:");
             char input = scan.next().charAt(0);
-            System.out.println("Points = " + cn.getPoints());
+            System.out.println("Points : " + cn.getPoints()+"  Level: "+level.getLevels()+"  Moves: "+game.getMovesCount());
             switch (input) {
                 case 'w'://move up
                     cn.checkCoins('w');
@@ -92,6 +96,8 @@ public class ProgramConstructionRPG {
             if (leavue == 1) {
                 break;
             }
+            level.CheckLevel();
+            game.MovesCount++;
             game.printArray();
         }
 
@@ -100,15 +106,17 @@ public class ProgramConstructionRPG {
             char SaveData = scan.next().charAt(0);
 
         System.out.println (
-        "You entered:" + SaveData);
-
-
+        "You entered: " + SaveData);
+        
             switch (SaveData) {
             case 's':
-                NGame.setSavedRows(game.GetCurrentRow());
-                NGame.setSavedCols(game.GetCurrentCol());
+                NGame.setSavedRows(game.getCurrentRow());
+                NGame.setSavedCols(game.getCurrentCol());
+                NGame.setSavedMovesCount(game.getMovesCount());
                 NGame.setSavedPoints(cn.getPoints());
-                NGame.getCoins(game);
+                NGame.setSavedLevels(level.getLevels());
+
+                NGame.saveCoins(game);
                 NGame.writeSave();
                 System.out.println("Data has been Saved.");
                 break;
@@ -118,8 +126,11 @@ public class ProgramConstructionRPG {
             default:
                 System.out.println("Invalid input.");
                 break;
-
         }
 
+    }
+    public void SaveSetup()
+    {
+        
     }
 }

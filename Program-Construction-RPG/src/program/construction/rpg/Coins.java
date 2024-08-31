@@ -35,7 +35,6 @@ public class Coins {
     }
    public void generateCoins()
    {
-        
         Random rand = new Random();
         CoinCount = rand.nextInt(9)+1;//so zero wont ever appear
         int coinsPlaced = 0;
@@ -52,8 +51,8 @@ public class Coins {
    
 //    
     public void checkCoins(char move) {
-      int CurrentRow = game.GetCurrentRow();
-      int CurrentCol = game.GetCurrentCol();
+      int CurrentRow = game.getCurrentRow();
+      int CurrentCol = game.getCurrentCol();
       
       switch (move) {
           case 'w': // move up

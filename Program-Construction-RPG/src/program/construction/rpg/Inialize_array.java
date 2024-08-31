@@ -4,8 +4,7 @@
  */
 package program.construction.rpg;
 
-import java.util.*;
-import java.io.*;
+
 /**
  *
  * @author rynob
@@ -31,27 +30,27 @@ public class Inialize_array {
         array[Row][Col] = 'C';
     }
 
-    public int GetCurrentCol() {
+    public int getCurrentCol() {
         return currentCol;
     }
 
-    public int GetCurrentRow() {
+    public int getCurrentRow() {
         return currentRow;
     }
 
-    public static int GetRows() {
+    public static int getRows() {
         return ROWS;
     }
 
-    public static int GetCols() {
+    public static int getCols() {
         return COLS;
     }
 
-    public static int GetNewRow() {
+    public static int getNewRow() {
         return NewRow;
     }
 
-    public static int GetNewCol() {
+    public static int getNewCol() {
         return NewCol;
     }
 
