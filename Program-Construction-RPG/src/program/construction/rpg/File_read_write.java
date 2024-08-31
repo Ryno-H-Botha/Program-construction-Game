@@ -64,7 +64,6 @@ public class File_read_write {
                     PlayerInfo.put(parts[0],Integer.parseInt(parts[1]));
                     InLine = inStream.readLine();
                 }
-                System.out.println("hi");
                 SavedRow = PlayerInfo.get("Row");
                 SavedCol = PlayerInfo.get("Col");
                 SavedPoints = PlayerInfo.get("Points");

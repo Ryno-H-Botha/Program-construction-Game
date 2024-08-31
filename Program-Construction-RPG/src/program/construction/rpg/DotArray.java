@@ -58,6 +58,7 @@ public class DotArray extends ProgramConstructionRPG{
             }
         }
         array[currentRow][currentCol] = '@';
+        
     }
 
     private static void printArray() {

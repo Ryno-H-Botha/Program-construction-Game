@@ -20,7 +20,6 @@ public class ProgramConstructionRPG {
     public static int COLS = Inialize_array.GetCols();
     public static int NewRow = ROWS / 2;
     public static int NewCol = COLS / 2;
-
     public static String inputfile = "./resources/input.txt";
     public static String savefile = "./resources/Save.txt";
     public static String instfile = "./resources/Inst.txt";
@@ -30,25 +29,26 @@ public class ProgramConstructionRPG {
     public static void main(String[] args) {
         
         File_read_write NGame = new File_read_write();
-        
         Scanner scan = new Scanner(System.in);
         
         System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
         String start = scan.nextLine().toLowerCase();
-            Movement game = new Movement();
-                            
+        Movement game = new Movement();
+        Coins cn = new Coins(game);
+        
         int leavue = 0;
         switch (start) {
             case "n":
-                    game = new Movement();
+                    cn.setPoints(0);
                     game.SetPostion(NewRow, NewCol);
                     
                 break;
             case "s":
                     NGame.readSaveArrayFile();
+                    cn.setPoints(NGame.getSavedPoints());
                     int SavedRow = NGame.getSavedRows();
                     int SavedCol = NGame.getSavedCols();
-                    game = new Movement();
+                    cn.generateCoins();
                     game.SetPostion(SavedRow,SavedCol);
                     game.printArray();
                     
@@ -66,15 +66,19 @@ public class ProgramConstructionRPG {
         
             switch (input) {
                 case 'w'://move up
+                        cn.checkCoins('w');
                          game.moveUp();
                     break;
                 case 's':
+                        cn.checkCoins('s');
                         game.moveDown();
                     break;
                 case 'a':
+                        cn.checkCoins('a');
                         game.moveLeft();
                     break;
                 case 'd':
+                        cn.checkCoins('d');
                         game.moveRight();
                     break;
                 case 'q':
