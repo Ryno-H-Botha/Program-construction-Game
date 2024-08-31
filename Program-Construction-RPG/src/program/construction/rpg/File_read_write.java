@@ -18,10 +18,12 @@ import java.io.*;
  */
 public class File_read_write {
     public static HashMap<String, Integer> PlayerInfo = new HashMap();
-
-   private static void writeSave(String filename) {
+    public static int SavedRow;
+    public static int SavedCol;
+    public static int SavedPoints;
+   public void writeSave() {
         try {
-            PrintWriter OutScores = new PrintWriter(new FileOutputStream(filename));  //file write/genarator
+            PrintWriter OutScores = new PrintWriter(new FileOutputStream("./resources/Save.txt"));  //file write/genarator
             Set eSet = PlayerInfo.entrySet();
                 Iterator it = eSet.iterator();
                 while (it.hasNext()) {
@@ -62,6 +64,10 @@ public class File_read_write {
                     PlayerInfo.put(parts[0],Integer.parseInt(parts[1]));
                     InLine = inStream.readLine();
                 }
+                System.out.println("hi");
+                SavedRow = PlayerInfo.get("Row");
+                SavedCol = PlayerInfo.get("Col");
+                SavedPoints = PlayerInfo.get("Points");
                 inStream.close();
             } catch (FileNotFoundException e) {
                 System.out.println("Error reading from file ");
@@ -71,37 +77,31 @@ public class File_read_write {
         }
         public static int getSavedRows()
         {
-            readSaveArrayFile();
-            int Rows = PlayerInfo.get(Rows);
-            return Rows;
+            return SavedRow;
         }
         public static int getSavedCols()
         {
-            readSaveArrayFile();
-            int Cols = PlayerInfo.get(Cols);
-            return Cols;
+            return SavedCol;
         }
         public static int getSavedPoints()
         {
-            readSaveArrayFile();
-            int Points = PlayerInfo.get(Points);
-            return Points;
+            return SavedPoints;
         }
         public static void setSavedRows(int Rows)
         {
-            readSaveArrayFile();
-            int Points = PlayerInfo.replace("Points",Points);
+            
+            PlayerInfo.replace("Points",Rows);
         }
         public static void setSavedCols(int Cols)
         {
-            readSaveArrayFile();
-            int Points = PlayerInfo.replace("Points",Points);
+            
+            PlayerInfo.replace("Points",Cols);
 
         }
         public static void setSavedPoints(int Points)
         {
-            readSaveArrayFile();
-            int Points = PlayerInfo.replace("Points",Points);
+            
+           PlayerInfo.replace("Points",Points);
 
         }
 }

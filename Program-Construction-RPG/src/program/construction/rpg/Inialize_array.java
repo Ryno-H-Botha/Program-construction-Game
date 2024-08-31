@@ -12,13 +12,30 @@ import java.io.*;
  * @author rynob
  */
 public class Inialize_array {
-    private static final int ROWS = 9;
-    private static final int COLS = 13;
-    public static int NewRow = ROWS / 2;
-    public static int NewCol = COLS / 2;
-    public static char[][] array = new char[ROWS][COLS];
-    public int currentRow;
-    public int currentCol;
+    protected static final int ROWS = 9;
+    protected static final int COLS = 13;
+    protected static int NewRow = ROWS / 2;
+    protected static int NewCol = COLS / 2;
+    protected  char[][] array = new char[ROWS][COLS];
+    protected int currentRow;
+    protected int currentCol;
+
+    
+    public void SetPostion(int Row,int Col)
+    {
+        this.currentRow = Row;
+        this.currentCol = Col;
+        GenerateArray(Row,Col);
+        
+    }
+    public int GetCurrentCol()
+    {
+        return currentCol;
+    }
+    public int GetCurrentRow()
+    {
+       return currentRow;
+    }
     public static int GetRows()
     {
        return ROWS;
@@ -35,17 +52,16 @@ public class Inialize_array {
     {
         return NewCol;
     }
-
     
-    public static void GenerateArray(int RowPos, int ColPos) {
+    public  void GenerateArray(int Row,int Col) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 array[i][j] = '.';
             }
         }
-        array[RowPos][ColPos] = '@';
+        array[Row][Col] = '@';
     }
-    private static void printArray() {
+    public void printArray() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 System.out.print(array[i][j] + " ");
