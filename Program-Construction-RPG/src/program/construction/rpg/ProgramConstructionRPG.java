@@ -30,12 +30,14 @@ public class ProgramConstructionRPG {
         File_read_write NGame = new File_read_write();
         Scanner scan = new Scanner(System.in);
         Movement game = new Movement();
+        Coins cn = new Coins(game);
         
         int moves = 0;
         int leavue = 0; 
         
-        Coins cn = new Coins(game);
-
+        
+        NGame.readSaveArrayFile();
+        
         System.out.println ("New game     (n) \nSaved Game   (s) \nInstructions (I)");
         char start = scan.next().charAt(0);
             if(start == 'i') 
@@ -51,7 +53,6 @@ public class ProgramConstructionRPG {
                 game.printArray();
                 break;
             case 's':
-                NGame.readSaveArrayFile();
                 cn.setPoints(NGame.getSavedPoints());
                 int SavedRow = NGame.getSavedRows();
                 int SavedCol = NGame.getSavedCols();
@@ -107,7 +108,6 @@ public class ProgramConstructionRPG {
 
             switch (SaveData) {
             case 's':
-                NGame.readSaveArrayFile();
                 NGame.setSavedRows(game.GetCurrentRow());
                 NGame.setSavedCols(game.GetCurrentCol());
                 NGame.setSavedPoints(cn.getPoints());
