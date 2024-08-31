@@ -10,6 +10,7 @@ package program.construction.rpg;
  */
 import java.util.*;
 import java.io.*;
+
 import static program.construction.rpg.Inialize_array.COLS;
 import static program.construction.rpg.Inialize_array.ROWS;
 

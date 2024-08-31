@@ -48,6 +48,7 @@ public class Coins {
             }
         }
     }
+   
 //    
   public void checkCoins(char move)
    {
@@ -60,6 +61,7 @@ public class Coins {
                          if(CurrentRow >= 0 && w == 'C')
                         {
                             setPoints(getPoints()+10);
+                            CoinCount--;
                         }
                     break;
                 case 's':
@@ -68,6 +70,7 @@ public class Coins {
                         if(CurrentRow < game.ROWS && s == 'C')
                         {
                             setPoints(getPoints()+10);
+                            CoinCount--;
                         }
                     break;
                 case 'a':
@@ -76,6 +79,7 @@ public class Coins {
                          if(CurrentCol >= 0&&a == 'C')
                         {
                             setPoints(getPoints()+10);
+                            CoinCount--;
                         }
                     break;
                 case 'd':
@@ -84,6 +88,7 @@ public class Coins {
                          if(CurrentCol < game.COLS && d == 'C')
                         {
                             setPoints(getPoints()+10);
+                            CoinCount--;
                         }
                     break;
             }
