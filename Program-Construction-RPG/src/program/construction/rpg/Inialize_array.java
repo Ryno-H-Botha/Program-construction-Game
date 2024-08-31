@@ -28,6 +28,10 @@ public class Inialize_array {
         GenerateArray(Row,Col);
         
     }
+    public void setCoinPostion (int Row,int Col)
+    {
+        array[Row][Col] = 'C';
+    }
     public int GetCurrentCol()
     {
         return currentCol;
@@ -62,6 +66,11 @@ public class Inialize_array {
         array[Row][Col] = '@';
     }
     public void printArray() {
+        char c = array[NewRow][NewCol];
+        if (!(c == '@')){
+            array[NewRow][NewCol] = 'H';
+        }
+
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 System.out.print(array[i][j] + " ");

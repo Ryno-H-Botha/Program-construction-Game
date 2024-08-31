@@ -72,7 +72,7 @@ public class ProgramConstructionRPG {
                         game.moveDown();
                     break;
                 case 'a':
-                        game.moveDown();
+                        game.moveLeft();
                     break;
                 case 'd':
                         game.moveRight();
