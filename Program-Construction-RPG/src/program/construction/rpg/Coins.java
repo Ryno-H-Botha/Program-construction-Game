@@ -51,31 +51,39 @@ public class Coins {
 //    
   public void checkCoins(char move)
    {
-       int CurretnRow = game.GetCurrentRow();
+       int CurrentRow = game.GetCurrentRow();
        int CurrentCol = game.GetCurrentCol();
             switch (move) {
                 case 'w'://move up
-                    if(game.array[CurretnRow--][CurrentCol] == 'C')
+                     CurrentRow--;
+                        char w = game.array[CurrentRow][CurrentCol];
+                         if(CurrentRow >= 0 && w == 'C')
                         {
-                            Points = Points+10;
+                            setPoints(getPoints()+10);
                         }
                     break;
                 case 's':
-                        if(game.array[CurretnRow++][CurrentCol] == 'C')
+                    CurrentRow++;
+                    char s = game.array[CurrentRow][CurrentCol]; 
+                        if(CurrentRow < game.ROWS && s == 'C')
                         {
-                            Points = Points+10;
+                            setPoints(getPoints()+10);
                         }
                     break;
                 case 'a':
-                         if(game.array[CurretnRow][CurrentCol--] == 'C')
+                        CurrentCol--;
+                         char a = game.array[CurrentRow][CurrentCol];
+                         if(CurrentCol >= 0&&a == 'C')
                         {
-                            Points = Points+10;
+                            setPoints(getPoints()+10);
                         }
                     break;
                 case 'd':
-                         if(game.array[CurretnRow][CurrentCol++] == 'C')
+                        CurrentCol++;
+                        char d = game.array[CurrentRow][CurrentCol++];
+                         if(CurrentCol < game.COLS && d == 'C')
                         {
-                            Points = Points+10;
+                            setPoints(getPoints()+10);
                         }
                     break;
             }

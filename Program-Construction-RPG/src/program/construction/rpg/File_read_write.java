@@ -92,12 +92,12 @@ public class File_read_write {
     }
 
     public void setSavedRows(int Rows) {
-        PlayerInfo.put("Points", Rows);
+        PlayerInfo.put("Row", Rows);
     }
 
     public void setSavedCols(int Cols) {
 
-        PlayerInfo.put("Points", Cols);
+        PlayerInfo.put("Col", Cols);
 
     }
 
