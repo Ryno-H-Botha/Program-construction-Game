@@ -11,6 +11,7 @@ import java.util.Random;
 public class Coins {
     public int Points;
     public int CoinCount;
+    
     private Movement game;
     public Coins(Movement game)
     {
@@ -50,47 +51,51 @@ public class Coins {
     }
    
 //    
-  public void checkCoins(char move)
-   {
-       int CurrentRow = game.GetCurrentRow();
-       int CurrentCol = game.GetCurrentCol();
-            switch (move) {
-                case 'w'://move up
-                     CurrentRow--;
-                        char w = game.array[CurrentRow][CurrentCol];
-                         if(CurrentRow >= 0 && w == 'C')
-                        {
-                            setPoints(getPoints()+10);
-                            CoinCount--;
-                        }
-                    break;
-                case 's':
-                    CurrentRow++;
-                    char s = game.array[CurrentRow][CurrentCol]; 
-                        if(CurrentRow < game.ROWS && s == 'C')
-                        {
-                            setPoints(getPoints()+10);
-                            CoinCount--;
-                        }
-                    break;
-                case 'a':
-                        CurrentCol--;
-                         char a = game.array[CurrentRow][CurrentCol];
-                         if(CurrentCol >= 0&&a == 'C')
-                        {
-                            setPoints(getPoints()+10);
-                            CoinCount--;
-                        }
-                    break;
-                case 'd':
-                        CurrentCol++;
-                        char d = game.array[CurrentRow][CurrentCol++];
-                         if(CurrentCol < game.COLS && d == 'C')
-                        {
-                            setPoints(getPoints()+10);
-                            CoinCount--;
-                        }
-                    break;
-            }
-    }
+    public void checkCoins(char move) {
+      int CurrentRow = game.GetCurrentRow();
+      int CurrentCol = game.GetCurrentCol();
+      
+      switch (move) {
+          case 'w': // move up
+              if (CurrentRow > 0) {
+                  CurrentRow--; // Update row first
+                  if (game.array[CurrentRow][CurrentCol] == 'C') {
+                      setPoints(getPoints() + 10);
+                      game.array[CurrentRow][CurrentCol] = '.'; // Clear the coin after collecting
+                      CoinCount--;
+                  }
+              }
+              break;
+          case 's': // move down
+              if (CurrentRow < game.ROWS - 1) {
+                  CurrentRow++; // Update row first
+                  if (game.array[CurrentRow][CurrentCol] == 'C') {
+                      setPoints(getPoints() + 10);
+                      game.array[CurrentRow][CurrentCol] = '.'; // Clear the coin after collecting
+                      CoinCount--;
+                  }
+              }
+              break;
+          case 'a': // move left
+              if (CurrentCol > 0) {
+                  CurrentCol--; // Update column first
+                  if (game.array[CurrentRow][CurrentCol] == 'C') {
+                      setPoints(getPoints() + 10);
+                      game.array[CurrentRow][CurrentCol] = '.'; // Clear the coin after collecting
+                      CoinCount--;
+                  }
+              }
+              break;
+          case 'd': // move right
+              if (CurrentCol < game.COLS - 1) {
+                  CurrentCol++; // Update column first
+                  if (game.array[CurrentRow][CurrentCol] == 'C') {
+                      setPoints(getPoints() + 10);
+                      game.array[CurrentRow][CurrentCol] = '.'; // Clear the coin after collecting
+                      CoinCount--;
+                  }
+              }
+              break;
+      }
+  }
 }

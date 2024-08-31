@@ -55,7 +55,7 @@ public class ProgramConstructionRPG {
                 int SavedRow = NGame.getSavedRows();
                 int SavedCol = NGame.getSavedCols();
                 game.SetPostion(SavedRow, SavedCol);
-                cn.generateCoins();
+                NGame.setCoins(game);
                 game.printArray();
                 break;
         }
@@ -108,6 +108,7 @@ public class ProgramConstructionRPG {
                 NGame.setSavedRows(game.GetCurrentRow());
                 NGame.setSavedCols(game.GetCurrentCol());
                 NGame.setSavedPoints(cn.getPoints());
+                NGame.getCoins(game);
                 NGame.writeSave();
                 System.out.println("Data has been Saved.");
                 break;

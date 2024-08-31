@@ -22,6 +22,7 @@ public class File_read_write {
     public static int SavedRow;
     public static int SavedCol;
     public static int SavedPoints;
+    public static int CoinCount = 0;
     public static HashMap<String, Integer> PlayerInfo = new HashMap<>();
 
     public void writeSave() {
@@ -78,8 +79,38 @@ public class File_read_write {
                 System.out.println("Error reading from file ");
             }
         }
-     
-    
+    public void getCoins(Movement game)
+    {
+        
+        for (int i = 0; i < game.ROWS; i++) {
+            for (int j = 0; j <game. COLS; j++) {
+                char value = game.array[i][j];
+                if(value == 'C')
+                {
+                    CoinCount++;
+                    String R = "Coin"+CoinCount+"Row";
+                    String C = "Coin"+CoinCount+"Col";
+                    PlayerInfo.put(R, i);
+                    PlayerInfo.put(C, j);
+                }
+               
+            }
+            System.out.println();
+        }
+        PlayerInfo.put("CoinCount",CoinCount);
+    }
+        public void setCoins(Movement game)
+    {
+        int count = PlayerInfo.get("CoinCount");
+        for (int i = 1; i <= count; i++) {
+            
+            String R = "Coin"+i+"Row";
+            String C = "Coin"+i+"Col";
+            int Row = PlayerInfo.get(R);
+            int Col = PlayerInfo.get(C);
+            game.array[Row][Col] = 'C';
+        }
+    }
 
     public static int getSavedRows() {
         return SavedRow;
