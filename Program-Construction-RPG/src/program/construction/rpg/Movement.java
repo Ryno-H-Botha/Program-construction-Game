@@ -8,14 +8,13 @@ package program.construction.rpg;
  *
  * @author rynob
  */
-
 import java.util.*;
 import java.io.*;
 
-public class Movement extends Inialize_array  
-{
-     // Move up method
-    public  void moveUp() {
+public class Movement extends Inialize_array {
+    // Move up method
+
+    public void moveUp() {
         if (currentRow > 0) {
             array[currentRow][currentCol] = '.';  // Clear current position
             currentRow--;
@@ -24,7 +23,7 @@ public class Movement extends Inialize_array
     }
 
     // Move down method
-    public  void moveDown() {
+    public void moveDown() {
         if (currentRow < ROWS - 1) {
             array[currentRow][currentCol] = '.';  // Clear current position
             currentRow++;
@@ -33,7 +32,7 @@ public class Movement extends Inialize_array
     }
 
     // Move left method
-    public  void moveLeft() {
+    public void moveLeft() {
         if (currentCol > 0) {
             array[currentRow][currentCol] = '.';  // Clear current position
             currentCol--;
@@ -42,7 +41,7 @@ public class Movement extends Inialize_array
     }
 
     // Move right method
-    public  void moveRight() {
+    public void moveRight() {
         if (currentCol < COLS - 1) {
             array[currentRow][currentCol] = '.';  // Clear current position
             currentCol++;
@@ -50,6 +49,3 @@ public class Movement extends Inialize_array
         }
     }
 }
-
-    
-

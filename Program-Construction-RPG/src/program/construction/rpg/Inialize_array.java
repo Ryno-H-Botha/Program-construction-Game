@@ -6,58 +6,56 @@ package program.construction.rpg;
 
 import java.util.*;
 import java.io.*;
-
 /**
  *
  * @author rynob
  */
 public class Inialize_array {
+
     protected static final int ROWS = 9;
     protected static final int COLS = 13;
     protected static int NewRow = ROWS / 2;
     protected static int NewCol = COLS / 2;
-    protected  char[][] array = new char[ROWS][COLS];
+    protected char[][] array = new char[ROWS][COLS];
     protected int currentRow;
     protected int currentCol;
 
-    
-    public void SetPostion(int Row,int Col)
-    {
+    public void SetPostion(int Row, int Col) {
         this.currentRow = Row;
         this.currentCol = Col;
-        GenerateArray(Row,Col);
-        
+        GenerateArray(Row, Col);
+
     }
-    public void setCoinPostion (int Row,int Col)
-    {
+
+    public void setCoinPostion(int Row, int Col) {
         array[Row][Col] = 'C';
     }
-    public int GetCurrentCol()
-    {
+
+    public int GetCurrentCol() {
         return currentCol;
     }
-    public int GetCurrentRow()
-    {
-       return currentRow;
+
+    public int GetCurrentRow() {
+        return currentRow;
     }
-    public static int GetRows()
-    {
-       return ROWS;
+
+    public static int GetRows() {
+        return ROWS;
     }
-    public static int GetCols()
-    {
+
+    public static int GetCols() {
         return COLS;
     }
-    public static int GetNewRow()
-    {
-       return NewRow ;
+
+    public static int GetNewRow() {
+        return NewRow;
     }
-    public static int GetNewCol()
-    {
+
+    public static int GetNewCol() {
         return NewCol;
     }
-    
-    public  void GenerateArray(int Row,int Col) {
+
+    public void GenerateArray(int Row, int Col) {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 array[i][j] = '.';
@@ -65,9 +63,10 @@ public class Inialize_array {
         }
         array[Row][Col] = '@';
     }
+
     public void printArray() {
         char c = array[NewRow][NewCol];
-        if (!(c == '@')){
+        if (!(c == '@')) {
             array[NewRow][NewCol] = 'H';
         }
         for (int i = 0; i < ROWS; i++) {
@@ -77,5 +76,5 @@ public class Inialize_array {
             System.out.println();
         }
     }
-    
+
 }

@@ -24,63 +24,64 @@ public class ProgramConstructionRPG {
     public static String savefile = "./resources/Save.txt";
     public static String instfile = "./resources/Inst.txt";
     public static char[][] array = new char[ROWS][COLS];
-    
-    
+
     public static void main(String[] args) {
-        
+
         File_read_write NGame = new File_read_write();
         Scanner scan = new Scanner(System.in);
-        public int moves = 0;
-        System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
-        String start = scan.nextLine().toLowerCase();
         Movement game = new Movement();
-        Coins cn = new Coins(game);
         
-        int leavue = 0;
+        int moves = 0;
+        int leavue = 0; 
+        
+        Coins cn = new Coins(game);
+
+        System.out.println ("New game     (n) \nSaved Game   (s) \nInstructions (I)");
+        char start = scan.next().charAt(0);
+            if(start == 'i') 
+            {
+                NGame.readInstArrayFile();
+                start = scan.next().charAt(0);
+            }
         switch (start) {
-            case "n":
-                    NGame.readSaveArrayFile();
-                    cn.setPoints(0);
-                    game.SetPostion(NewRow, NewCol);
-                    cn.generateCoins();
-                    game.printArray();
+            case 'n':
+                cn.setPoints(0);
+                game.SetPostion(NewRow, NewCol);
+                cn.generateCoins();
+                game.printArray();
                 break;
-            case "s":
-                    NGame.readSaveArrayFile();
-                    cn.setPoints(NGame.getSavedPoints());
-                    int SavedRow = NGame.getSavedRows();
-                    int SavedCol = NGame.getSavedCols();
-                    game.SetPostion(SavedRow,SavedCol);
-                    cn.generateCoins();
-                    game.printArray();
-                    
-                break;
-            case "i":
-                    NGame.readInstArrayFile();
-                    start = scan.nextLine().toLowerCase();
+            case 's':
+                NGame.readSaveArrayFile();
+                cn.setPoints(NGame.getSavedPoints());
+                int SavedRow = NGame.getSavedRows();
+                int SavedCol = NGame.getSavedCols();
+                game.SetPostion(SavedRow, SavedCol);
+                cn.generateCoins();
+                game.printArray();
                 break;
         }
 
-        while (true) {
-            System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
+
+            while (true) {
+                System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
             char input = scan.next().charAt(0);
-            System.out.println("Points = "+cn.getPoints());
+            System.out.println("Points = " + cn.getPoints());
             switch (input) {
                 case 'w'://move up
-                        cn.checkCoins('w');
-                         game.moveUp();
+                    cn.checkCoins('w');
+                    game.moveUp();
                     break;
                 case 's':
-                        cn.checkCoins('s');
-                        game.moveDown();
+                    cn.checkCoins('s');
+                    game.moveDown();
                     break;
                 case 'a':
-                        cn.checkCoins('a');
-                        game.moveLeft();
+                    cn.checkCoins('a');
+                    game.moveLeft();
                     break;
                 case 'd':
-                        cn.checkCoins('d');
-                        game.moveRight();
+                    cn.checkCoins('d');
+                    game.moveRight();
                     break;
                 case 'q':
                     System.out.println("Exiting...");
@@ -94,30 +95,33 @@ public class ProgramConstructionRPG {
                 break;
             }
             game.printArray();
-
         }
-        System.out.println("Save (S)\nDelete (D)");
-        char SaveData = scan.next().charAt(0);
-        
-        System.out.println("You entered:" + SaveData);
 
-        
-        switch(SaveData){
+        System.out.println (
+        "Save (S)\nDelete (D)");
+            char SaveData = scan.next().charAt(0);
+
+        System.out.println (
+        "You entered:" + SaveData);
+
+
+            switch (SaveData) {
             case 's':
+                NGame.readSaveArrayFile();
                 NGame.setSavedRows(game.GetCurrentRow());
                 NGame.setSavedCols(game.GetCurrentCol());
                 NGame.setSavedPoints(cn.getPoints());
                 NGame.writeSave();
                 System.out.println("Data has been Saved.");
-            break;
-            case 'd':    
+                break;
+            case 'd':
                 System.out.println("Data deleted.");
-            break;
+                break;
             default:
                 System.out.println("Invalid input.");
-            break;
-           
+                break;
+
         }
-    
+
     }
 }
