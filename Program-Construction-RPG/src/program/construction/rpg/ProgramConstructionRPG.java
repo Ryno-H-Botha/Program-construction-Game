@@ -4,6 +4,9 @@
  */
 package program.construction.rpg;
 
+import java.util.*;
+import java.io.*;
+
 /**
  *
  * @author rynob
@@ -13,12 +16,103 @@ public class ProgramConstructionRPG {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        // TODO code application logic here
-        
-        System.out.println("Hello world");
-        
-        
-    }
+    public static int ROWS = Inialize_array.GetRows();
+    public static int COLS = Inialize_array.GetCols();
+    public static int NewRow = ROWS / 2;
+    public static int NewCol = COLS / 2;
+    public static String inputfile = "./resources/input.txt";
+    public static String savefile = "./resources/Save.txt";
+    public static String instfile = "./resources/Inst.txt";
+    public static char[][] array = new char[ROWS][COLS];
     
+    
+    public static void main(String[] args) {
+        
+        File_read_write NGame = new File_read_write();
+        Scanner scan = new Scanner(System.in);
+        
+        System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
+        String start = scan.nextLine().toLowerCase();
+        Movement game = new Movement();
+        Coins cn = new Coins(game);
+        
+        int leavue = 0;
+        switch (start) {
+            case "n":
+                    cn.setPoints(0);
+                    game.SetPostion(NewRow, NewCol);
+                    
+                break;
+            case "s":
+                    NGame.readSaveArrayFile();
+                    cn.setPoints(NGame.getSavedPoints());
+                    int SavedRow = NGame.getSavedRows();
+                    int SavedCol = NGame.getSavedCols();
+                    cn.generateCoins();
+                    game.SetPostion(SavedRow,SavedCol);
+                    game.printArray();
+                    
+                break;
+            case "i":
+                    NGame.readInstArrayFile();
+                    start = scan.nextLine().toLowerCase();
+                break;
+        }
+
+        while (true) {
+            
+            System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit:");
+            char input = scan.next().charAt(0);
+        
+            switch (input) {
+                case 'w'://move up
+                        cn.checkCoins('w');
+                         game.moveUp();
+                    break;
+                case 's':
+                        cn.checkCoins('s');
+                        game.moveDown();
+                    break;
+                case 'a':
+                        cn.checkCoins('a');
+                        game.moveLeft();
+                    break;
+                case 'd':
+                        cn.checkCoins('d');
+                        game.moveRight();
+                    break;
+                case 'q':
+                    System.out.println("Exiting...");
+                    leavue = 1;
+                    break;
+                default:
+                    System.out.println("Invalid input. Use WASD keys.");
+                    break;
+            }
+            if (leavue == 1) {
+                break;
+            }
+            game.printArray();
+        }
+        System.out.println("Save (S)\nDelete (D)");
+        char SaveData = scan.next().charAt(0);
+        
+        System.out.println("You entered:" + SaveData);
+
+        
+        switch(SaveData){
+            case 's':
+                NGame.writeSave();
+                System.out.println("Data has been Saved.");
+            break;
+            case 'd':    
+                System.out.println("Data deleted.");
+            break;
+            default:
+                System.out.println("Invalid input.");
+            break;
+           
+        }
+    
+    }
 }
