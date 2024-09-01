@@ -29,11 +29,24 @@ public class ProgramConstructionRPG {
     public static int COLS = Inialize_array.getCols();
     public static int NewRow = ROWS / 2;
     public static int NewCol = COLS / 2;
-    public static String inputfile = "./resources/input.txt";
-    public static String savefile = "./resources/Save.txt";
-    public static String instfile = "./resources/Inst.txt";
-    public static char[][] array = new char[ROWS][COLS];
 
+    public static char[][] array = new char[ROWS][COLS];
+    private static int saveFile;
+    private static boolean saveSelected = false;
+    
+    private static final Set<String> validOptionsSaves = new HashSet<>();
+    static {
+        validOptionsSaves.add("1");
+        validOptionsSaves.add("2");
+        validOptionsSaves.add("3");
+    }
+    private static final Set<String> validOptionsGameSets = new HashSet<>();
+    static {
+        validOptionsGameSets.add("n");
+        validOptionsGameSets.add("s");
+        validOptionsGameSets.add("i");
+    }
+    
     private static void Setup() {
         scan = new Scanner(System.in);
         GameFiles = new File_read_write();
@@ -42,28 +55,18 @@ public class ProgramConstructionRPG {
         Coin = new Coins(Game);
         Ability = new Abilities();
         Level = new Levels(Game, Coin, Mons, Ability);
-        GameFiles.readSaveArrayFile();
         leave = false;
     }
 
     public static void main(String[] args) {
 
         Setup();
-
-        System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
-        String start = scan.nextLine().toLowerCase();
-        while (!(start.contentEquals("i") || start.contentEquals("n") || start.contentEquals("s"))) {
-            System.out.println("Invalid input: \nNew game     (n) \nSaved Game   (s) \nInstructions (I)");
-            start = scan.nextLine().toLowerCase();
-        }
+        String start = gameSetSelect();
         if (start.equals("i")) {
             GameFiles.readInstArrayFile();
             start = scan.nextLine().toLowerCase();
         }
         switch (start) {
-            case "i": {
-
-            }
             case "n":
                 Coin.setPoints(0);
                 Game.SetPostion(NewRow, NewCol);
@@ -72,14 +75,13 @@ public class ProgramConstructionRPG {
                 Game.printArray();
                 break;
             case "s":
+                saveSelected = true;
+                saveFile = saveFileSelect();
+                GameFiles.readSaveArrayFile(saveFile);
                 saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level);
-
                 Game.printArray();
                 break;
         }
-
-        Game.printArray(); // Print the array to show the monster
-
         while (true) {
             System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit Then press Enter to confirm:");
             char input = scan.next().charAt(0);
@@ -122,22 +124,28 @@ public class ProgramConstructionRPG {
             }
 
             System.out.println("Points : " + Coin.getPoints() + "  Level: " + Level.getLevels() + "  Moves: " + Game.getMovesCount());
+            System.out.println("Frozen (F) unused : "+Ability.getFrozenUses()+" Confused (C) unused : "+Ability.getConfusedUses()+" Intimidated (G) unused : "+Ability.getIntimidatedUses());
             Level.CheckLevel();
             Game.MovesCount++;
             Game.printArray();
         }
 
-        System.out.println(
-                "Save (S)\nDelete (D)");
+        System.out.println("Save (S)\nDelete (D)");
         char SaveData = scan.next().charAt(0);
-
-        System.out.println(
-                "You entered: " + SaveData);
 
         switch (SaveData) {
             case 's':
-                saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level);
-
+                if(saveSelected == true)
+                {   
+                    saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level);//write data
+                    System.out.println("Save "+saveFile+" hase been updated");
+                }
+                else{
+                    saveFile = saveFileSelect();
+                    GameFiles.readSaveArrayFile(saveFile);//fill and set hash
+                    saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level);//write data
+                    GameFiles.writeSave(saveFile);
+                }
                 System.out.println("Data has been Saved.");
                 break;
             case 'd':
@@ -148,7 +156,32 @@ public class ProgramConstructionRPG {
                 break;
         }
     }
+    public static int saveFileSelect() {
+        String value = "";
+        System.out.println("Which file would you like to use?\nSave (1)\nSave (2)\nSave (3)");
+        while(value.contentEquals(""))
+        {
+            value = scan.nextLine().trim();
+        }
+        System.out.println("Save selected: Save_" + value); // Debug print
+        while(!validOptionsSaves.contains(value)) {
+            System.out.println("Invalid input. Please select:\nSave (1)\nSave (2)\nSave (3)");
+            value = scan.nextLine().trim();
+            System.out.println("Save selected: Save_" + value);
+        }
+        return Integer.parseInt(value);
+    }
+    public static String gameSetSelect() {
+        System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
+        String value = scan.nextLine().trim();
+        while (!validOptionsGameSets.contains(value)) {
+            System.out.println("Invalid input. Please select:\nNew game     (n) \nSaved Game   (s) \nInstructions (o)");
+            value = scan.nextLine().trim();
+        }
 
+        return value;
+    }
+   
     public static void saveReadSetup(File_read_write GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level) {
         int SavedRow = GameFiles.getSavedRows();
         int SavedCol = GameFiles.getSavedCols();
@@ -160,7 +193,6 @@ public class ProgramConstructionRPG {
         Ability.setIntimidatedUses(GameFiles.getSavedIntimidatedUses());
         Mons.setMonsCurrentRow(GameFiles.getSavedMonsCurrentRow());
         Mons.setMonsCurrentCol(GameFiles.getSavedMonsCurrentCol());
-
         Game.SetPostion(SavedRow, SavedCol);
         GameFiles.setArrayCoins(Game, Coin);
         Mons.checkMons();
@@ -178,7 +210,6 @@ public class ProgramConstructionRPG {
         GameFiles.setSavedMonsCurrentRow(Mons.getMonsCurrentRow());
         GameFiles.setSavedMonsCurrentCol(Mons.getMonsCurrentCol());
         GameFiles.saveCoins(Game);
-        GameFiles.writeSave();
     }
 
 }

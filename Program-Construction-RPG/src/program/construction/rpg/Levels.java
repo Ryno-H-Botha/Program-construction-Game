@@ -35,9 +35,10 @@ public class Levels {
         if (Coin.CoinCount == 0 && Game.currentRow == Game.NewRow && Game.currentCol == Game.NewCol) {
             System.out.println("Congratulaions you finished \nLevel: " + Levels + " Next Level starting Good luck");
             Levels++;
+            System.out.println("Uses of Frozen left: " + Abilities.getFrozenUses());
             System.out.println("Uses of Confusion left: " + Abilities.getConfusedUses());
             System.out.println("Uses of Intimidations left: " + Abilities.getIntimidatedUses());
-            System.out.println("Monster position: " + Mons.getMonsCurrentRow() + ", " + Mons.getMonsCurrentRow());
+
             Game.array[Mons.getMonsCurrentRow()][Mons.getMonsCurrentCol()] = '.';
             Mons.setMonsterPosition();
             Coin.generateCoins();

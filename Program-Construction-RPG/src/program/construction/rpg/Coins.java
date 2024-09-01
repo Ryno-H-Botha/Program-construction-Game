@@ -21,21 +21,7 @@ public class Coins {
         this.game = game;
     }
 
-    public int getPoints() {
-        return this.Points;
-    }
 
-    public void setPoints(int Points) {
-        this.Points = Points;
-    }
-
-    public int getCoinCount() {
-        return this.CoinCount;
-    }
-
-    public void setCoinCounts(int CoinCount) {
-        this.CoinCount = CoinCount;
-    }
 
     public void generateCoins() {
         Random rand = new Random();
@@ -99,5 +85,20 @@ public class Coins {
                 }
                 break;
         }
+    }
+        public int getPoints() {
+        return this.Points;
+    }
+
+    public void setPoints(int Points) {
+        this.Points = Points;
+    }
+
+    public int getCoinCount() {
+        return this.CoinCount;
+    }
+
+    public void setCoinCounts(int CoinCount) {
+        this.CoinCount = CoinCount;
     }
 }

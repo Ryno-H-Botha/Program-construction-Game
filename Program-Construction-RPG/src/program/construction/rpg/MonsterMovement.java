@@ -95,8 +95,6 @@ public class MonsterMovement {
                 break;
         }
         checkMons();
-
-        System.out.println("Monster moved to (" + MonsCurrentRow + "," + MonsCurrentCol + ")");//dont need this
     }
 
     public void checkMons() {
@@ -127,26 +125,7 @@ public class MonsterMovement {
             // Decide whether to move towards or away from the player
             if (Rand.nextInt(9) == CHANCE_TO_MOVE_AWAY) {
                 moveAwayFromPlayer();
-                // Attempt to move away from the player
-//                if (Math.abs(rowDifference) > Math.abs(colDifference)) {//check if row diffrenc greater than col
-//                    if (rowDifference > 0 && MonsCurrentRow < Game.getRows() - 1) {
-//                        MonsCurrentRow++; // Move down away from the player
-//                        hasMoved = true;
-//                    } else if (rowDifference < 0 && MonsCurrentRow > 0) {
-//                        MonsCurrentRow--; // Move up away from the player
-//                        hasMoved = true;
-//                    }
-//                } else {// row isn't greater
-//                    if (colDifference > 0 && MonsCurrentCol < Game.getCols() - 1) {
-//                        MonsCurrentCol++; // Move right away from the player
-//                        hasMoved = true;
-//                    } else if (colDifference < 0 && MonsCurrentCol > 0) {
-//                        MonsCurrentCol--; // Move left away from the player
-//                        hasMoved = true;
-//                    }
-//                }
             }
-
             if (!hasMoved) {
                 // Attempt to move towards the player
                 if (Math.abs(rowDifference) > Math.abs(colDifference)) {
@@ -163,10 +142,10 @@ public class MonsterMovement {
                     }
                 }
             }
-        } else {
-            // Random movement if the player is outside the 5-tile radius or movement was not successful
-            moveRandomly();
-        }
+            } else {
+                // Random movement if the player is outside the 5-tile radius or movement was not successful
+                moveRandomly();
+            }
     }
 
     private void moveAwayFromPlayer() {

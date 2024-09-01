@@ -22,7 +22,7 @@ public class Abilities {
 
     public static void freeze() {
         isFrozen = true;
-        frozenTurns = 3; // Monster is frozen for 5 turns
+        frozenTurns = 3; // Monster is frozen for 3 turns
     }
 
     public static void intimidation() {

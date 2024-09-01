@@ -29,11 +29,15 @@ public class File_read_write {
     public static int SavedMonsCurrentRow;
     public static int SavedMonsCurrentCol;
     public static int CoinCount = 0;
+    public static String savedfile1 = "./resources/Save_1.txt";
+    public static String savedfile2 = "./resources/Save_2.txt";
+    public static String savedfile3 = "./resources/Save_3.txt";
     public static HashMap<String, Integer> PlayerInfo = new HashMap<>();
 
-    public void writeSave() {
+    public void writeSave(int Save) {
         try {
-            PrintWriter OutScores = new PrintWriter(new FileOutputStream("./resources/Save.txt"));  //file write/genarator
+            String FileName = SetSaveFile(Save);
+            PrintWriter OutScores = new PrintWriter(new FileOutputStream(FileName));  //file write/genarator
             Set eSet = PlayerInfo.entrySet();
             Iterator it = eSet.iterator();
             while (it.hasNext()) {
@@ -49,7 +53,6 @@ public class File_read_write {
         try {
             BufferedReader inStream = new BufferedReader(new FileReader("./resources/Inst.txt"));
             String InLine = inStream.readLine();
-
             while (InLine != null) {
                 System.out.println(InLine);
                 InLine = inStream.readLine();
@@ -59,7 +62,6 @@ public class File_read_write {
                     e.printStackTrace();
                 }
             }
-
             inStream.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error reading from file ");
@@ -69,9 +71,10 @@ public class File_read_write {
 
     }
 
-    public static void readSaveArrayFile() {
+    public static void readSaveArrayFile(int Save) {
         try {
-            BufferedReader inStream = new BufferedReader(new FileReader("./resources/Save.txt"));
+            String FileName = SetSaveFile(Save);
+            BufferedReader inStream = new BufferedReader(new FileReader(FileName));
             String InLine = inStream.readLine();
             while (InLine != null) {
                 String[] parts = InLine.split("=");
@@ -85,6 +88,22 @@ public class File_read_write {
         } catch (IOException e) {
             System.out.println("Error reading from file ");
         }
+    }
+    private static String SetSaveFile(int Save)
+    {
+        if(Save == 1)
+        {
+         
+                return savedfile1;
+        }
+        else if(Save == 2)
+        {
+         return savedfile2;
+        }  
+        else
+        {
+                return savedfile3;
+        }          
     }
 
     public static void readHash() {

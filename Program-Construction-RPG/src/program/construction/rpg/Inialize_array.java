@@ -17,12 +17,7 @@ public class Inialize_array {
     protected char[][] array = new char[ROWS][COLS];
     protected int currentRow;
     protected int currentCol;
-
-//    public Inialize_array(int Row, int Col) {
-//        this.currentRow = Row;
-//        this.currentCol = Col;
-//        GenerateArray(Row, Col);
-//    }
+    
     public void SetPostion(int Row, int Col) {
         this.currentRow = Row;
         this.currentCol = Col;
