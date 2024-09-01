@@ -4,7 +4,6 @@
  */
 package program.construction.rpg;
 
-
 /**
  *
  * @author rynob
@@ -18,6 +17,13 @@ public class Inialize_array {
     protected char[][] array = new char[ROWS][COLS];
     protected int currentRow;
     protected int currentCol;
+    MonsterMovement monster = new MonsterMovement(this);
+
+    public Inialize_array(int Row, int Col) {
+        this.currentRow = Row;
+        this.currentCol = Col;
+        GenerateArray(Row, Col);
+    }
 
     public void SetPostion(int Row, int Col) {
         this.currentRow = Row;
@@ -68,12 +74,19 @@ public class Inialize_array {
         if (!(c == '@')) {
             array[NewRow][NewCol] = 'H';
         }
+        monster.moveMonster();
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
-                System.out.print(array[i][j] + " ");
+                if (i == monster.getCurrentRow() && j == monster.getCurrentCol()) {
+                    System.out.print("M ");
+                } else {
+                    System.out.print(array[i][j] + " ");
+                }
             }
             System.out.println();
         }
+        System.out.println("Uses of Confusion left: " + Abilities.getConfusedUses());
+        System.out.println("Uses of Intimidations left: " + Abilities.getIntimidatedUses());
+        System.out.println("Monster position: " + monster.getCurrentRow() + ", " + monster.getCurrentCol());
     }
-
 }

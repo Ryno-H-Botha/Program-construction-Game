@@ -16,6 +16,11 @@ import static program.construction.rpg.Inialize_array.ROWS;
 public class Movement extends Inialize_array {
     // Move up method
     public int MovesCount;
+    
+    public Movement(int Row, int Col) {
+        super(Row, Col); // Call the Inialize_array constructor with the correct parameters
+    }
+    
     public void moveUp() {
         if (currentRow > 0) {
             array[currentRow][currentCol] = '.';  // Clear current position

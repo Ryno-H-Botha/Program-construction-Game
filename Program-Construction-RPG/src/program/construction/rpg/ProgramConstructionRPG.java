@@ -24,26 +24,27 @@ public class ProgramConstructionRPG {
     public static String savefile = "./resources/Save.txt";
     public static String instfile = "./resources/Inst.txt";
     public static char[][] array = new char[ROWS][COLS];
+    public static char ability;
 
     public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         File_read_write NGame = new File_read_write();
-        Movement game = new Movement();
+        Movement game = new Movement(NewRow, NewCol);
         Coins cn = new Coins(game);
-        Levels level = new Levels(game,cn);
+        Levels level = new Levels(game, cn);
+
+        Inialize_array arrayInitializer = new Inialize_array(NewRow, NewCol);
+
         NGame.readSaveArrayFile();
+
         int leavue = 0;
         System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
         String start = scan.nextLine().toLowerCase();
-        
-        
-        
-        
-            if(start.equals("i")) 
-            {
-                NGame.readInstArrayFile();
-                start = scan.nextLine().toLowerCase();
-            }
+
+        if (start.equals("i")) {
+            NGame.readInstArrayFile();
+            start = scan.nextLine().toLowerCase();
+        }
         switch (start) {
             case "n":
                 cn.setPoints(0);
@@ -54,20 +55,20 @@ public class ProgramConstructionRPG {
             case "s":
                 cn.setPoints(NGame.getSavedPoints());
                 level.setLevels(NGame.getSavedLevels());
-                level.setLevels(NGame.getSavedLevels());
                 int SavedRow = NGame.getSavedRows();
-                int SavedCol = NGame.getSavedCols();   
+                int SavedCol = NGame.getSavedCols();
                 game.setMovesCount(NGame.getSavedMovesCount());
                 game.SetPostion(SavedRow, SavedCol);
-                NGame.setArrayCoins(game,cn);
+                NGame.setArrayCoins(game, cn);
                 game.printArray();
                 break;
         }
 
-            while (true) {
+        game.printArray(); // Print the array to show the monster
+
+        while (true) {
             System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit Then press Enter to confiem:");
             char input = scan.next().charAt(0);
-            System.out.println("Points : " + cn.getPoints()+"  Level: "+level.getLevels()+"  Moves: "+game.getMovesCount());
             switch (input) {
                 case 'w'://move up
                     cn.checkCoins('w');
@@ -90,25 +91,32 @@ public class ProgramConstructionRPG {
                     leavue = 1;
                     break;
                 default:
-                    System.out.println("Invalid input. Use WASD keys.");
+                    if (input == 'f' || input == 'g' || input == 'c') {
+                        ability = input;
+                        sendAbilityCommand(ability);
+                    } else {
+                        System.out.println("Invalid input. Use WASD keys.");
+                    }
                     break;
             }
             if (leavue == 1) {
                 break;
             }
+
+            System.out.println("Points : " + cn.getPoints() + "  Level: " + level.getLevels() + "  Moves: " + game.getMovesCount());
             level.CheckLevel();
             game.MovesCount++;
             game.printArray();
         }
 
-        System.out.println (
-        "Save (S)\nDelete (D)");
-            char SaveData = scan.next().charAt(0);
+        System.out.println(
+                "Save (S)\nDelete (D)");
+        char SaveData = scan.next().charAt(0);
 
-        System.out.println (
-        "You entered: " + SaveData);
-        
-            switch (SaveData) {
+        System.out.println(
+                "You entered: " + SaveData);
+
+        switch (SaveData) {
             case 's':
                 NGame.setSavedRows(game.getCurrentRow());
                 NGame.setSavedCols(game.getCurrentCol());
@@ -127,10 +135,27 @@ public class ProgramConstructionRPG {
                 System.out.println("Invalid input.");
                 break;
         }
-
     }
-    public void SaveSetup()
-    {
-        
+
+    public void SaveSetup() {
+    }
+
+    public static void sendAbilityCommand(char abili) {
+        Abilities ab = new Abilities();
+
+        switch (ability) {
+            case 'f':
+                ab.freeze(); // Call freeze ability
+                break;
+            case 'g':
+                ab.intimidation(); // Call glue ability
+                break;
+            case 'c':
+                ab.confusion(); // Call confusion ability
+                break;
+            default:
+                System.out.println("Invalid ability command.");
+                break;
+        }
     }
 }
