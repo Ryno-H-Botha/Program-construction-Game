@@ -65,6 +65,11 @@ public class ProgramConstructionRPG {
         if (start.equals("i")) {
             GameFiles.readInstArrayFile();
             start = scan.nextLine().toLowerCase();
+            while(!(start.contentEquals("n")||start.contentEquals("s"))||start.contentEquals("i"))
+            {
+                System.out.println("Invalid input try again.");
+                start = scan.nextLine().toLowerCase();
+            }
         }
         switch (start) {
             case "n":
@@ -172,10 +177,10 @@ public class ProgramConstructionRPG {
         return Integer.parseInt(value);
     }
     public static String gameSetSelect() {
-        System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
-        String value = scan.nextLine().trim();
+        System.out.println("New game     (N) \nSaved Game   (S) \nInstructions (I)");
+        String value = scan.nextLine().trim().toLowerCase();
         while (!validOptionsGameSets.contains(value)) {
-            System.out.println("Invalid input. Please select:\nNew game     (n) \nSaved Game   (s) \nInstructions (o)");
+            System.out.println("Invalid input. Please select:\nNew game     (N) \nSaved Game   (S) \nInstructions (I)");
             value = scan.nextLine().trim();
         }
 
