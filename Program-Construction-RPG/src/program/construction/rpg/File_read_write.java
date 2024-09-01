@@ -23,6 +23,11 @@ public class File_read_write {
     public static int SavedPoints;
     public static int SavedLevels;
     public static int SavedMovesCount;
+    public static int SavedFrozenUses;
+    public static int SavedConfusedUses;
+    public static int SavedIntimidatedUses;
+    public static int SavedMonsCurrentRow;
+    public static int SavedMonsCurrentCol;
     public static int CoinCount = 0;
     public static HashMap<String, Integer> PlayerInfo = new HashMap<>();
 
@@ -36,8 +41,6 @@ public class File_read_write {
             }
             OutScores.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Error writeing from file ");
-        } catch (IOException e) {
             System.out.println("Error writeing from file ");
         }
     }
@@ -75,17 +78,26 @@ public class File_read_write {
                 PlayerInfo.put(parts[0], Integer.parseInt(parts[1]));
                 InLine = inStream.readLine();
             }
-            SavedRow = PlayerInfo.get("Row");
-            SavedCol = PlayerInfo.get("Col");
-            SavedPoints = PlayerInfo.get("Points");
-            SavedLevels = PlayerInfo.get("Levels");
-            SavedMovesCount = PlayerInfo.get("MovesCount");
+            readHash();
             inStream.close();
         } catch (FileNotFoundException e) {
             System.out.println("Error reading from file ");
         } catch (IOException e) {
             System.out.println("Error reading from file ");
         }
+    }
+
+    public static void readHash() {
+        SavedRow = PlayerInfo.get("Row");
+        SavedCol = PlayerInfo.get("Col");
+        SavedPoints = PlayerInfo.get("Points");
+        SavedLevels = PlayerInfo.get("Levels");
+        SavedMovesCount = PlayerInfo.get("MovesCount");
+        SavedFrozenUses = PlayerInfo.get("FrozenUses");
+        SavedConfusedUses = PlayerInfo.get("ConfusedUses");
+        SavedIntimidatedUses = PlayerInfo.get("IntimidatedUses");
+        SavedMonsCurrentRow = PlayerInfo.get("MonsCurrentRow");
+        SavedMonsCurrentCol = PlayerInfo.get("MonsCurrentCol");
     }
 
     public void saveCoins(Movement game) {
@@ -118,12 +130,21 @@ public class File_read_write {
             game.array[Row][Col] = 'C';
         }
     }
-    
+
+    //all gets
     public static int getSavedRows() {
         return SavedRow;
     }
 
     public static int getSavedCols() {
+        return SavedCol;
+    }
+
+    public static int getMonstSavedRows() {
+        return SavedRow;
+    }
+
+    public static int getMonstSavedCols() {
         return SavedCol;
     }
 
@@ -138,9 +159,28 @@ public class File_read_write {
     public static int getSavedMovesCount() {
         return SavedMovesCount;
     }
-    
-    
 
+    public static int getSavedFrozenUses() {
+        return SavedFrozenUses;
+    }
+
+    public static int getSavedConfusedUses() {
+        return SavedConfusedUses;
+    }
+
+    public static int getSavedIntimidatedUses() {
+        return SavedIntimidatedUses;
+    }
+
+    public int getSavedMonsCurrentRow() {
+        return SavedMonsCurrentRow;
+    }
+
+    public int getSavedMonsCurrentCol() {
+        return SavedMonsCurrentCol;
+    }
+
+    //all sets 
     public void setSavedRows(int Rows) {
         PlayerInfo.put("Row", Rows);
     }
@@ -150,12 +190,22 @@ public class File_read_write {
         PlayerInfo.put("Col", Cols);
 
     }
+
+    public void setMonstSavedRows(int Rows) {
+        PlayerInfo.put("MonstRow", Rows);
+    }
+
+    public void setMonstSavedCols(int Cols) {
+
+        PlayerInfo.put("MonstCol", Cols);
+    }
+
     public void setSavedPoints(int Points) {
 
         PlayerInfo.put("Points", Points);
 
     }
-    
+
     public void setSavedLevels(int Levels) {
         PlayerInfo.put("Levels", Levels);
     }
@@ -164,4 +214,23 @@ public class File_read_write {
         PlayerInfo.put("MovesCount", MovesCount);
     }
 
+    public void setSavedFrozenUses(int uses) {
+        PlayerInfo.put("FrozenUses", uses);
+    }
+
+    public void setSavedConfusedUses(int uses) {
+        PlayerInfo.put("ConfusedUses", uses);
+    }
+
+    public void setSavedIntimidatedUses(int uses) {
+        PlayerInfo.put("IntimidatedUses", uses);
+    }
+
+    public void setSavedMonsCurrentRow(int Row) {
+        PlayerInfo.put("MonsCurrentRow", Row);
+    }
+
+    public void setSavedMonsCurrentCol(int Col) {
+        PlayerInfo.put("MonsCurrentCol", Col);
+    }
 }

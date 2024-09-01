@@ -17,14 +17,12 @@ public class Inialize_array {
     protected char[][] array = new char[ROWS][COLS];
     protected int currentRow;
     protected int currentCol;
-    
 
 //    public Inialize_array(int Row, int Col) {
 //        this.currentRow = Row;
 //        this.currentCol = Col;
 //        GenerateArray(Row, Col);
 //    }
-
     public void SetPostion(int Row, int Col) {
         this.currentRow = Row;
         this.currentCol = Col;
@@ -34,6 +32,28 @@ public class Inialize_array {
 
     public void setCoinPostion(int Row, int Col) {
         array[Row][Col] = 'C';
+    }
+
+    public void GenerateArray(int Row, int Col) {
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                array[i][j] = '.';
+            }
+        }
+        array[Row][Col] = '@';
+    }
+
+    public void printArray() {
+        char c = array[NewRow][NewCol];
+        if (!(c == '@')) {
+            array[NewRow][NewCol] = 'H';
+        }
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                System.out.print(array[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 
     public int getCurrentCol() {
@@ -60,47 +80,4 @@ public class Inialize_array {
         return NewCol;
     }
 
-    public void GenerateArray(int Row, int Col) {
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                array[i][j] = '.';
-            }
-        }
-        array[Row][Col] = '@';
-    }
-
-     public void printArray() {
-        char c = array[NewRow][NewCol];
-        if (!(c == '@')) {
-            array[NewRow][NewCol] = 'H';
-        }
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLS; j++) {
-                System.out.print(array[i][j] + " ");
-            }
-            System.out.println();
-        }
-    }
-    
-    
-//    public void printArray() {
-//        char c = array[NewRow][NewCol];
-//        if (!(c == '@')) {
-//            array[NewRow][NewCol] = 'H';
-//        }
-//        monster.moveMonster();
-//        for (int i = 0; i < ROWS; i++) {
-//            for (int j = 0; j < COLS; j++) {
-//                if (i == monster.getCurrentRow() && j == monster.getCurrentCol()) {
-//                    System.out.print("M ");
-//                } else {
-//                    System.out.print(array[i][j] + " ");
-//                }
-//            }
-//            System.out.println();
-//        }
-//        System.out.println("Uses of Confusion left: " + Abilities.getConfusedUses());
-//        System.out.println("Uses of Intimidations left: " + Abilities.getIntimidatedUses());
-//        System.out.println("Monster position: " + monster.getCurrentRow() + ", " + monster.getCurrentCol());
-//    }
 }

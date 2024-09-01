@@ -16,16 +16,15 @@ public class ProgramConstructionRPG {
     /**
      * @param args the command line arguments
      */
-    
-    private static Scanner scan ;
+    private static Scanner scan;
     private static File_read_write GameFiles;
-    private static Movement Game ;
-    private static MonsterMovement Mons ;
-    private static Coins Coin ;
-    private static Levels Level ;
-    private static Abilities Ability ;
+    private static Movement Game;
+    private static MonsterMovement Mons;
+    private static Coins Coin;
+    private static Levels Level;
+    private static Abilities Ability;
     private static boolean leave;
-    
+
     public static int ROWS = Inialize_array.getRows();
     public static int COLS = Inialize_array.getCols();
     public static int NewRow = ROWS / 2;
@@ -34,30 +33,26 @@ public class ProgramConstructionRPG {
     public static String savefile = "./resources/Save.txt";
     public static String instfile = "./resources/Inst.txt";
     public static char[][] array = new char[ROWS][COLS];
-    
-    private static void Setup()
-    {
+
+    private static void Setup() {
         scan = new Scanner(System.in);
         GameFiles = new File_read_write();
         Game = new Movement();
         Mons = new MonsterMovement(Game);
         Coin = new Coins(Game);
-        Level = new Levels(Game, Coin,Mons);
         Ability = new Abilities();
+        Level = new Levels(Game, Coin, Mons, Ability);
         GameFiles.readSaveArrayFile();
         leave = false;
     }
-    
-    
+
     public static void main(String[] args) {
-        
+
         Setup();
-        
-        
+
         System.out.println("New game     (n) \nSaved Game   (s) \nInstructions (I)");
         String start = scan.nextLine().toLowerCase();
-        while(!(start.contentEquals("i")||start.contentEquals("n")||start.contentEquals("s")))
-        {
+        while (!(start.contentEquals("i") || start.contentEquals("n") || start.contentEquals("s"))) {
             System.out.println("Invalid input: \nNew game     (n) \nSaved Game   (s) \nInstructions (I)");
             start = scan.nextLine().toLowerCase();
         }
@@ -66,9 +61,8 @@ public class ProgramConstructionRPG {
             start = scan.nextLine().toLowerCase();
         }
         switch (start) {
-            case "i":
-            {
-                
+            case "i": {
+
             }
             case "n":
                 Coin.setPoints(0);
@@ -78,13 +72,8 @@ public class ProgramConstructionRPG {
                 Game.printArray();
                 break;
             case "s":
-                Coin.setPoints(GameFiles.getSavedPoints());
-                Level.setLevels(GameFiles.getSavedLevels());
-                int SavedRow = GameFiles.getSavedRows();
-                int SavedCol = GameFiles.getSavedCols();
-                Game.setMovesCount(GameFiles.getSavedMovesCount());
-                Game.SetPostion(SavedRow, SavedCol);
-                GameFiles.setArrayCoins(Game, Coin);
+                saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level);
+
                 Game.printArray();
                 break;
         }
@@ -121,7 +110,7 @@ public class ProgramConstructionRPG {
                     break;
                 default:
                     if (input == 'f' || input == 'g' || input == 'c') {
-                         
+
                         Ability.sendAbilityCommand(input);
                     } else {
                         System.out.println("Invalid input. Use WASD keys.");
@@ -147,14 +136,8 @@ public class ProgramConstructionRPG {
 
         switch (SaveData) {
             case 's':
-                GameFiles.setSavedRows(Game.getCurrentRow());
-                GameFiles.setSavedCols(Game.getCurrentCol());
-                GameFiles.setSavedMovesCount(Game.getMovesCount());
-                GameFiles.setSavedPoints(Coin.getPoints());
-                GameFiles.setSavedLevels(Level.getLevels());
+                saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level);
 
-                GameFiles.saveCoins(Game);
-                GameFiles.writeSave();
                 System.out.println("Data has been Saved.");
                 break;
             case 'd':
@@ -166,9 +149,36 @@ public class ProgramConstructionRPG {
         }
     }
 
-    public void SaveSetup(Movement game, Coins cn,MonsterMovement mons) {
-        
+    public static void saveReadSetup(File_read_write GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level) {
+        int SavedRow = GameFiles.getSavedRows();
+        int SavedCol = GameFiles.getSavedCols();
+        Coin.setPoints(GameFiles.getSavedPoints());
+        Level.setLevels(GameFiles.getSavedLevels());
+        Game.setMovesCount(GameFiles.getSavedMovesCount());
+        Ability.setFrozenUses(GameFiles.getSavedFrozenUses());
+        Ability.setConfusedUses(GameFiles.getSavedConfusedUses());
+        Ability.setIntimidatedUses(GameFiles.getSavedIntimidatedUses());
+        Mons.setMonsCurrentRow(GameFiles.getSavedMonsCurrentRow());
+        Mons.setMonsCurrentCol(GameFiles.getSavedMonsCurrentCol());
+
+        Game.SetPostion(SavedRow, SavedCol);
+        GameFiles.setArrayCoins(Game, Coin);
+        Mons.checkMons();
     }
 
-    
+    public static void saveDataSetup(File_read_write GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level) {
+        GameFiles.setSavedRows(Game.getCurrentRow());
+        GameFiles.setSavedCols(Game.getCurrentCol());
+        GameFiles.setSavedMovesCount(Game.getMovesCount());
+        GameFiles.setSavedPoints(Coin.getPoints());
+        GameFiles.setSavedLevels(Level.getLevels());
+        GameFiles.setSavedFrozenUses(Ability.getFrozenUses());
+        GameFiles.setSavedConfusedUses(Ability.getConfusedUses());
+        GameFiles.setSavedIntimidatedUses(Ability.getIntimidatedUses());
+        GameFiles.setSavedMonsCurrentRow(Mons.getMonsCurrentRow());
+        GameFiles.setSavedMonsCurrentCol(Mons.getMonsCurrentCol());
+        GameFiles.saveCoins(Game);
+        GameFiles.writeSave();
+    }
+
 }

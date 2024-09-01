@@ -6,7 +6,7 @@ package program.construction.rpg;
 
 /**
  *
- * @author rynob
+ * @author Илья Ilya
  */
 import java.util.*;
 import java.io.*;
@@ -23,7 +23,8 @@ public class MonsterMovement {
     private final double CHANCE_TO_MOVE_AWAY = 1;
     private int rowDifference;
     private int colDifference;
-    private boolean WasCoin ;
+    private boolean WasCoin;
+
     public MonsterMovement(Movement Game) {
         this.Game = Game;
         this.playerCol = Game.getCurrentCol();
@@ -34,8 +35,8 @@ public class MonsterMovement {
     public void setMonsterPosition() {
         int newCol;
         int newRow;
-        this. playerRow = Game.getCurrentRow();
-        this. playerCol = Game.getCurrentCol();
+        this.playerRow = Game.getCurrentRow();
+        this.playerCol = Game.getCurrentCol();
         this.rowDifference = MonsCurrentRow - playerRow;
         this.colDifference = MonsCurrentCol - playerCol;
         do {
@@ -47,13 +48,11 @@ public class MonsterMovement {
         checkMons();
     }
 
-  
-
     public void moveMonster() {
         int turnsRemaining = 0;
         String status = "normal";
-        this. playerRow = Game.getCurrentRow();
-        this. playerCol = Game.getCurrentCol();
+        this.playerRow = Game.getCurrentRow();
+        this.playerCol = Game.getCurrentCol();
         this.rowDifference = MonsCurrentRow - playerRow;
         this.colDifference = MonsCurrentCol - playerCol;
         if (Abilities.isMonsterFrozen()) {
@@ -99,8 +98,8 @@ public class MonsterMovement {
 
         System.out.println("Monster moved to (" + MonsCurrentRow + "," + MonsCurrentCol + ")");//dont need this
     }
-    public void checkMons()
-    {
+
+    public void checkMons() {
         if (MonsCurrentRow == playerRow && MonsCurrentCol == playerCol) {
             System.out.println("Game Over! The monster caught the player!");
             System.exit(0); // End the Game
@@ -108,23 +107,19 @@ public class MonsterMovement {
         // Check if the new position contains a coin or if it's out of bounds before placing the monster
         if (Game.array[MonsCurrentRow][MonsCurrentCol] == 'C') {
             WasCoin = true;
-        } 
+        }
         Game.array[MonsCurrentRow][MonsCurrentCol] = 'M'; // Place the monster at the new position
     }
-    
-    public void returnCoing()
-    {
-        if(WasCoin == true)
-        {
+
+    public void returnCoing() {
+        if (WasCoin == true) {
             Game.array[MonsCurrentRow][MonsCurrentCol] = 'C';
             WasCoin = false;
-        }
-        else
-        {
+        } else {
             Game.array[MonsCurrentRow][MonsCurrentCol] = '.';
         }
     }
-    
+
     private void moveBasedOnPlayer() {
         boolean hasMoved = false;
 
@@ -215,11 +210,20 @@ public class MonsterMovement {
                 break;
         }
     }
+
     public int getMonsCurrentRow() {
         return MonsCurrentRow;
     }
 
     public int getMonsCurrentCol() {
         return MonsCurrentCol;
+    }
+
+    public void setMonsCurrentRow(int Row) {
+        MonsCurrentRow = Row;
+    }
+
+    public void setMonsCurrentCol(int Col) {
+        MonsCurrentCol = Col;
     }
 }

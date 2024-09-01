@@ -8,14 +8,13 @@ package program.construction.rpg;
  *
  * @author rynob
  */
-
-
 import static program.construction.rpg.Inialize_array.COLS;
 import static program.construction.rpg.Inialize_array.ROWS;
 
 public class Movement extends Inialize_array {
+
     // Move up method
-    public int MovesCount;
+    public int MovesCount = 1;
 
     public void moveUp() {
         if (currentRow > 0) {
@@ -51,7 +50,7 @@ public class Movement extends Inialize_array {
             array[currentRow][currentCol] = '@';  // Move the player right
         }
     }
-    
+
     public int getMovesCount() {
         return this.MovesCount;
     }
