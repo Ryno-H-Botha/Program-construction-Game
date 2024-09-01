@@ -1,0 +1,26 @@
+Welcome to coin hauler RPG.
+This game works by have a 9 by 13 array 
+. . . . . . . . . . . . . 
+. . . . . . . . . . . . . 
+. . . . . . . . . . . . . 
+. . . . . . . . . . . . . 
+. . . . . . @ . . . . . . 
+. . . . . . . . . . . . . 
+. . . . . . . . . . . . . 
+. . . . . . . . . . . . . 
+. . . . . . . . . . . . .
+.
+where your character @ must move around using 
+W(up), S(down),A(left),D(right) collect
+the coins to progress your points will be counted 1 per coin.
+.
+This is a turn base you input a letter then press enter to move.
+.
+if you ever want to leave press (q).
+and you'l be prompted to (S) save your game or D delete it.
+.
+to start select 
+(S)for saved game or 
+(N) for new game.
+Good luck!
+ 
