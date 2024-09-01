@@ -16,25 +16,72 @@ public class Abilities {
     private static int frozenTurns = 0;
     private static int confusedTurns = 0;
     private static int intimidatedTurns = 0;
-    private static int frozenUses = 0;
-    private static int confusedUses = 0;
-    private static int intimidatedUses = 0;
+    private static int frozenUses = 3;
+    private static int confusedUses = 3;
+    private static int intimidatedUses = 3;
 
     public static void freeze() {
         isFrozen = true;
-        frozenTurns = 5; // Monster is frozen for 5 turns
+        frozenTurns = 3; // Monster is frozen for 5 turns
     }
 
     public static void intimidation() {
         isIntimidated = true;
-        intimidatedTurns = 5; // Monster is intimidated for 5 turns
+        intimidatedTurns = 2; // Monster is intimidated for 2 turns
     }
 
     public static void confusion() {
         isConfused = true;
-        confusedTurns = 5; // Monster is confused for 5 turns
+        confusedTurns = 3; // Monster is confused for 3 turns
     }
+    
+    public static void sendAbilityCommand(char ability) {
+        
 
+        switch (ability) {
+            case 'f':
+                if (frozenUses <= 0)
+                {
+                    System.out.println("no uses left");
+                    delay();
+                }
+                else{
+                    freeze(); // Call freeze ability
+                    frozenUses--;
+                }
+                break;
+            case 'g':
+                if (intimidatedUses <= 0)
+                {
+                    System.out.println("no uses left");
+                    delay();
+                }
+                else{
+                    intimidation(); // Call glue ability
+                    intimidatedUses--;
+                }
+
+                break;
+            case 'c':
+                if (confusedUses <= 0)
+                {
+                    System.out.println("no uses left");
+                    delay();
+                }
+                else{
+                    confusion(); // Call confusion ability
+                    confusedUses--;
+                }
+
+                break;
+            default:
+                System.out.println("Invalid ability command.");
+                break;
+        }
+    }
+    
+    
+    
     public static void decrementAbilityTurns() {
         if (frozenTurns > 0) {
             frozenTurns--;
@@ -67,7 +114,19 @@ public class Abilities {
     public static int getIntimidatedUses() {
         return intimidatedUses;
     }
+    public static void setFrozenUses(int uses) {
+        frozenUses = uses;
+    }
 
+    public static void setConfusedUses(int uses) {
+        confusedUses = uses;
+    }
+
+    public static void getIntimidatedUses(int uses) {
+        intimidatedUses = uses;
+    }
+    
+    
     public static boolean isMonsterFrozen() {
         return isFrozen;
     }
@@ -91,5 +150,12 @@ public class Abilities {
     public static int getIntimidatedTurns() {
         return intimidatedTurns;
     }
-
+    private static void delay()
+    {
+        try {
+            Thread.sleep(800);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

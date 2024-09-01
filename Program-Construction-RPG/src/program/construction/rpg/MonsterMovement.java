@@ -14,46 +14,48 @@ import program.construction.rpg.Inialize_array;
 
 public class MonsterMovement {
 
-    private Inialize_array pos; // Reference to the Inialize_array object
-    private Random rad = new Random();
-    private int currentRow;
-    private int currentCol;
-
-    private final double CHANCE_TO_MOVE_AWAY = 0.6;
-
-    public MonsterMovement(Inialize_array pos) {
-        this.pos = pos;
-        setPosition();
-        placeMon();
+    private Movement Game; // Reference to the Inialize_array object
+    private Random Rand = new Random();
+    private int MonsCurrentRow;
+    private int MonsCurrentCol;
+    private int playerRow;
+    private int playerCol;
+    private final double CHANCE_TO_MOVE_AWAY = 1;
+    private int rowDifference;
+    private int colDifference;
+    private boolean WasCoin ;
+    public MonsterMovement(Movement Game) {
+        this.Game = Game;
+        this.playerCol = Game.getCurrentCol();
+        this.playerRow = Game.getCurrentRow();
+        WasCoin = false;
     }
 
-    public void setPosition() {
+    public void setMonsterPosition() {
         int newCol;
         int newRow;
-        int playerRow = pos.getCurrentRow();
-        int playerCol = pos.getCurrentCol();
+        this. playerRow = Game.getCurrentRow();
+        this. playerCol = Game.getCurrentCol();
+        this.rowDifference = MonsCurrentRow - playerRow;
+        this.colDifference = MonsCurrentCol - playerCol;
         do {
-            newCol = rad.nextInt(pos.getCols());
-            newRow = rad.nextInt(pos.getRows());
+            newCol = Rand.nextInt(Game.getCols());
+            newRow = Rand.nextInt(Game.getRows());
         } while (newCol >= playerCol - 4 && newCol <= playerCol + 4 && newRow >= playerRow - 4 && newRow <= playerRow + 4); // Ensure monster doesn't spawn on player
-
-        this.currentRow = newRow;
-        this.currentCol = newCol;
+        this.MonsCurrentRow = newRow;
+        this.MonsCurrentCol = newCol;
+        checkMons();
     }
 
-    public void placeMon() {
-        // Only place the monster if it's not on the player's position
-        if (currentRow == pos.getCurrentRow() && currentCol == pos.getCurrentCol()) {
-            System.out.println("Monster is on the player's position.");
-        } else {
-            pos.array[currentRow][currentCol] = 'M';
-        }
-    }
+  
 
     public void moveMonster() {
         int turnsRemaining = 0;
         String status = "normal";
-
+        this. playerRow = Game.getCurrentRow();
+        this. playerCol = Game.getCurrentCol();
+        this.rowDifference = MonsCurrentRow - playerRow;
+        this.colDifference = MonsCurrentCol - playerCol;
         if (Abilities.isMonsterFrozen()) {
             status = "frozen";
             turnsRemaining = Abilities.getFrozenTurns();
@@ -74,88 +76,95 @@ public class MonsterMovement {
                 break;
 
             case "confused":
-                pos.array[currentRow][currentCol] = '.'; // Clear current position
+                returnCoing(); // Clear current position
                 moveRandomly();
                 System.out.println("Monster is confused. " + turnsRemaining + " turns remaining.");
                 Abilities.decrementAbilityTurns();
                 break;
 
             case "intimidated":
-                pos.array[currentRow][currentCol] = '.'; // Clear current position
+                returnCoing(); // Clear current position
                 moveAwayFromPlayer();
                 System.out.println("Monster is intimidated. " + turnsRemaining + " turns remaining.");
                 Abilities.decrementAbilityTurns();
                 break;
 
             default:
-                pos.array[currentRow][currentCol] = '.'; // Clear current position
+                returnCoing(); // Clear current position
                 moveBasedOnPlayer();
                 Abilities.decrementAbilityTurns();
                 break;
         }
+        checkMons();
 
-        int playerRow = pos.getCurrentRow();
-        int playerCol = pos.getCurrentCol();
-
-        if (currentRow == playerRow && currentCol == playerCol) {
-            System.out.println("Game Over! The monster caught the player!");
-            System.exit(0); // End the game
-        }
-
-        // Check if the new position contains a coin or if it's out of bounds before placing the monster
-        if (pos.array[currentRow][currentCol] != 'C') {
-            pos.array[currentRow][currentCol] = 'M'; // Place the monster at the new position
-        } else {
-            System.out.println("Monster cannot move to a coin's position or player position.");
-        }
-
-        System.out.println("Monster moved to (" + currentRow + "," + currentCol + ")");
+        System.out.println("Monster moved to (" + MonsCurrentRow + "," + MonsCurrentCol + ")");//dont need this
     }
-
+    public void checkMons()
+    {
+        if (MonsCurrentRow == playerRow && MonsCurrentCol == playerCol) {
+            System.out.println("Game Over! The monster caught the player!");
+            System.exit(0); // End the Game
+        }
+        // Check if the new position contains a coin or if it's out of bounds before placing the monster
+        if (Game.array[MonsCurrentRow][MonsCurrentCol] == 'C') {
+            WasCoin = true;
+        } 
+        Game.array[MonsCurrentRow][MonsCurrentCol] = 'M'; // Place the monster at the new position
+    }
+    
+    public void returnCoing()
+    {
+        if(WasCoin == true)
+        {
+            Game.array[MonsCurrentRow][MonsCurrentCol] = 'C';
+            WasCoin = false;
+        }
+        else
+        {
+            Game.array[MonsCurrentRow][MonsCurrentCol] = '.';
+        }
+    }
+    
     private void moveBasedOnPlayer() {
-        int playerRow = pos.getCurrentRow();
-        int playerCol = pos.getCurrentCol();
-        int rowDifference = currentRow - playerRow;
-        int colDifference = currentCol - playerCol;
-
         boolean hasMoved = false;
 
         if (Math.abs(rowDifference) <= 5 && Math.abs(colDifference) <= 5) {
             // Decide whether to move towards or away from the player
-            if (rad.nextDouble() < CHANCE_TO_MOVE_AWAY) {
+            if (Rand.nextInt(9) == CHANCE_TO_MOVE_AWAY) {
+                moveAwayFromPlayer();
                 // Attempt to move away from the player
-                if (Math.abs(rowDifference) > Math.abs(colDifference)) {
-                    if (rowDifference > 0 && currentRow < pos.getRows() - 1) {
-                        currentRow++; // Move down away from the player
-                        hasMoved = true;
-                    } else if (rowDifference < 0 && currentRow > 0) {
-                        currentRow--; // Move up away from the player
-                        hasMoved = true;
-                    }
-                } else {
-                    if (colDifference > 0 && currentCol < pos.getCols() - 1) {
-                        currentCol++; // Move right away from the player
-                        hasMoved = true;
-                    } else if (colDifference < 0 && currentCol > 0) {
-                        currentCol--; // Move left away from the player
-                        hasMoved = true;
-                    }
-                }
+//                if (Math.abs(rowDifference) > Math.abs(colDifference)) {//check if row diffrenc greater than col
+//                    if (rowDifference > 0 && MonsCurrentRow < Game.getRows() - 1) {
+//                        MonsCurrentRow++; // Move down away from the player
+//                        hasMoved = true;
+//                    } else if (rowDifference < 0 && MonsCurrentRow > 0) {
+//                        MonsCurrentRow--; // Move up away from the player
+//                        hasMoved = true;
+//                    }
+//                } else {// row isn't greater
+//                    if (colDifference > 0 && MonsCurrentCol < Game.getCols() - 1) {
+//                        MonsCurrentCol++; // Move right away from the player
+//                        hasMoved = true;
+//                    } else if (colDifference < 0 && MonsCurrentCol > 0) {
+//                        MonsCurrentCol--; // Move left away from the player
+//                        hasMoved = true;
+//                    }
+//                }
             }
 
             if (!hasMoved) {
                 // Attempt to move towards the player
                 if (Math.abs(rowDifference) > Math.abs(colDifference)) {
-                    if (rowDifference > 0 && currentRow > 0) {
-                        currentRow--; // Move up towards the player
-                    } else if (rowDifference < 0 && currentRow < pos.getRows() - 1) {
-                        currentRow++; // Move down towards the player
+                    if (rowDifference > 0 && MonsCurrentRow > 0) {
+                        MonsCurrentRow--; // Move up towards the player
+                    } else if (rowDifference < 0 && MonsCurrentRow < Game.getRows() - 1) {
+                        MonsCurrentRow++; // Move down towards the player
                     }
                 } else {
-                    if (colDifference > 0 && currentCol > 0) {
-                        currentCol--; // Move left towards the player
-                    } else if (colDifference < 0 && currentCol < pos.getCols() - 1) {
-                        currentCol++; // Move right towards the player
+                    if (colDifference > 0 && MonsCurrentCol > 0) {
+                        MonsCurrentCol--; // Move left towards the player
+                    } else if (colDifference < 0 && MonsCurrentCol < Game.getCols() - 1) {
+                        MonsCurrentCol++; // Move right towards the player
                     }
                 }
             }
@@ -166,57 +175,51 @@ public class MonsterMovement {
     }
 
     private void moveAwayFromPlayer() {
-        int playerRow = pos.getCurrentRow();
-        int playerCol = pos.getCurrentCol();
-        int rowDifference = currentRow - playerRow;
-        int colDifference = currentCol - playerCol;
-
         if (Math.abs(rowDifference) > Math.abs(colDifference)) {
-            if (rowDifference > 0 && currentRow < pos.getRows() - 1) {
-                currentRow++; // Move down away from the player
-            } else if (rowDifference < 0 && currentRow > 0) {
-                currentRow--; // Move up away from the player
+            if (rowDifference > 0 && MonsCurrentRow < Game.getRows() - 1) {
+                MonsCurrentRow++; // Move down away from the player
+            } else if (rowDifference < 0 && MonsCurrentRow > 0) {
+                MonsCurrentRow--; // Move up away from the player
             }
         } else {
-            if (colDifference > 0 && currentCol < pos.getCols() - 1) {
-                currentCol++; // Move right away from the player
-            } else if (colDifference < 0 && currentCol > 0) {
-                currentCol--; // Move left away from the player
+            if (colDifference > 0 && MonsCurrentCol < Game.getCols() - 1) {
+                MonsCurrentCol++; // Move right away from the player
+            } else if (colDifference < 0 && MonsCurrentCol > 0) {
+                MonsCurrentCol--; // Move left away from the player
             }
         }
     }
 
     private void moveRandomly() {
-        int move = rad.nextInt(4); // 4 because we have four directions
+        int move = Rand.nextInt(4); // 4 because we have four directions
         switch (move) {
             case 0: // Move up
-                if (currentRow > 0) {
-                    currentRow--;
+                if (MonsCurrentRow > 0) {
+                    MonsCurrentRow--;
                 }
                 break;
             case 1: // Move down
-                if (currentRow < pos.getRows() - 1) {
-                    currentRow++;
+                if (MonsCurrentRow < Game.getRows() - 1) {
+                    MonsCurrentRow++;
                 }
                 break;
             case 2: // Move left
-                if (currentCol > 0) {
-                    currentCol--;
+                if (MonsCurrentCol > 0) {
+                    MonsCurrentCol--;
                 }
                 break;
             case 3: // Move right
-                if (currentCol < pos.getCols() - 1) {
-                    currentCol++;
+                if (MonsCurrentCol < Game.getCols() - 1) {
+                    MonsCurrentCol++;
                 }
                 break;
         }
     }
-
-    public int getCurrentRow() {
-        return currentRow;
+    public int getMonsCurrentRow() {
+        return MonsCurrentRow;
     }
 
-    public int getCurrentCol() {
-        return currentCol;
+    public int getMonsCurrentCol() {
+        return MonsCurrentCol;
     }
 }

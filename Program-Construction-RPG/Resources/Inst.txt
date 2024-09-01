@@ -1,25 +1,64 @@
-Welcome to coin hauler RPG.
+    Welcome to coin hauler RPG.
 This game works by have a 9 by 13 array 
-. . . . . . . . . . . . . 
-. . . . . . . . . . . . . 
-. . . . . . . . . . . . . 
-. . . . . . . . . . . . . 
-. . . . . . @ . . . . . . 
-. . . . . . . . . . . . . 
-. . . . . . . . . . . . . 
-. . . . . . . . . . . . . 
-. . . . . . . . . . . . .
-.
+    Points : 100  Level: 1  Moves: 84
+    . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . 
+    . . . . . . @ . . . . . . 
+    . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . 
+    . . . . . . . . . . . . .
+ 
 where your character @ must move around using 
-W(up), S(down),A(left),D(right) collect
-the coins to progress your points will be counted 1 per coin.
+W(up), S(down),A(left),D(right) 
+
+This is a turn based game you input a letter then press enter to move.
+
+The goal is to collect the coins 
+. . .
+. C . Scattered around the map
+. . .
+For each coin your points will be go up 10 per coin.
 .
-This is a turn base you input a letter then press enter to move.
-.
+Simple? lets add a Monstrous twist 
+the monster in question : M
+. . . if the M Lands . . @       . M .
+. M . on next   ---> . M . --->  . . .
+. . . position       . . .       . . .
+
+You lose...
+
+you'll still have access to a previous save
+if you don't want to lose to much.
+
+How do you fight it can you?
+
+Yes 
+
+their are two main ways to fight the monster 
+1 Luck 
+The monster has a 1 in 10 chance to stumble and move away from you.
+
+2 Abilities
+you have 3 abilities
+Freeze (F) the monster freezes for 3 rounds
+Intimidate (G) the monster runs away for 2 rounds
+confusion (C) the monster runs randomly for 3 rounds
+
+You have 3 uses of each per game not level game use them well.
+
+To pass a Level you collect all the coins and return to Home
+. . .
+. H . in the center of the map
+. . .
+a new round starts your points and moves stay the same
+
 if you ever want to leave press (q).
 and you'l be prompted to (S) save your game or D delete it.
-.
-to start select 
+
+to start select:
 (S)for saved game or 
 (N) for new game.
 Good luck!

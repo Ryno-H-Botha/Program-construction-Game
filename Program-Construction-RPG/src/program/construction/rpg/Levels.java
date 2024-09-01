@@ -10,13 +10,15 @@ package program.construction.rpg;
  */
 public class Levels {
 
-    private Movement game;
-    private Coins cn;
+    private Movement Game;
+    private Coins Coin;
+    private MonsterMovement Mons;
     private int Levels;
 
-    public Levels(Movement game, Coins cn) {
-        this.game = game;
-        this.cn = cn;
+    public Levels(Movement game, Coins cn,MonsterMovement mons) {
+        this.Game = game;
+        this.Coin = cn;
+        this.Mons = mons;
     }
 
     public int getLevels() {
@@ -28,17 +30,20 @@ public class Levels {
     }
 
     public void CheckLevel() {
-        if (cn.CoinCount == 0 && game.currentRow == game.NewRow && game.currentCol == game.NewCol) {
+        if (Coin.CoinCount == 0 && Game.currentRow == Game.NewRow && Game.currentCol == Game.NewCol) {
             System.out.println("Congratulaions you finished \nLevel: " + Levels + " Next Level starting Good luck");
             Levels++;
-            if (Levels == 1) {// not needed but better for game experience
+            if (Levels == 1) {// not needed but better for Game experience
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            cn.generateCoins();
+            Game.array[Mons.getMonsCurrentRow()][Mons.getMonsCurrentCol()] = '.';
+            Mons.setMonsterPosition();
+            Coin.generateCoins();
+            
         }
     }
 

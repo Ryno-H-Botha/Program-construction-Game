@@ -50,6 +50,11 @@ public class File_read_write {
             while (InLine != null) {
                 System.out.println(InLine);
                 InLine = inStream.readLine();
+                try {
+                    Thread.sleep(800);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
             inStream.close();
