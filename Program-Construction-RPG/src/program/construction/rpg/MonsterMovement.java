@@ -233,4 +233,3 @@ public class MonsterMovement {
         MonsCurrentCol = Col;
     }
 }
-

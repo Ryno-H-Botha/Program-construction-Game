@@ -75,5 +75,8 @@ public class Movement extends Inialize_array {
     public void setMovesCount(int MovesCount) {
         this.MovesCount = MovesCount;
     }
+    
+    public char[][] getArray() {
+        return array; // Ensure this returns the updated array
+    }
 }
-

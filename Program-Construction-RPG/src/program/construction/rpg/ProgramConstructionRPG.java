@@ -4,9 +4,6 @@
  */
 package program.construction.rpg;
 
-import java.util.*;
-import java.io.*;
-
 /**
  *
  * @author rynob
@@ -14,6 +11,7 @@ import java.io.*;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
+import javax.swing.SwingUtilities;
 
 public class ProgramConstructionRPG {
 
@@ -27,6 +25,7 @@ public class ProgramConstructionRPG {
     private static Coins Coin;
     private static Levels Level;
     private static Abilities Ability;
+    private GUI gameGUI;
 
     // Flag to determine when to exit the game loop
     private static boolean leave;
@@ -39,13 +38,14 @@ public class ProgramConstructionRPG {
 
     // The game grid
     public static char[][] array = new char[ROWS][COLS];
-    
+
     // File for saving game state
     private static int saveFile;
     private static boolean saveSelected = false;
-    
+
     // Sets of valid inputs for save and game options
     private static final Set<String> validOptionsSaves = new HashSet<>();
+
     static {
         validOptionsSaves.add("1");
         validOptionsSaves.add("2");
@@ -53,12 +53,13 @@ public class ProgramConstructionRPG {
     }
 
     private static final Set<String> validOptionsGameSets = new HashSet<>();
+
     static {
         validOptionsGameSets.add("n");
         validOptionsGameSets.add("s");
         validOptionsGameSets.add("i");
     }
-    
+
     /**
      * Initializes the game components and the scanner.
      */
@@ -73,125 +74,102 @@ public class ProgramConstructionRPG {
         leave = false;
     }
 
-    public static void main(String[] args) {
-
-        // Set up the game components
+    public void initializeNewGame() {
         Setup();
+        Coin.setPoints(0);
+        Game.SetPostion(NewRow, NewCol);
+        Coin.generateCoins();
+        Mons.setMonsterPosition();
 
-        // Select game start option
-        String start = gameSetSelect();
+        // Use SwingUtilities.invokeLater to open GUI on the Event Dispatch Thread
+        SwingUtilities.invokeLater(() -> {
+            gameGUI = new GUI(Game, this);
+            gameGUI.updateGrid();           // Initial display in GUI
+        });
+    }
 
-        if (start.equals("i")) {
-            GameFiles.readInstArrayFile(); // Read initial game configuration
-            start = scan.nextLine().toLowerCase();
-            // Validate user input for game start option
-            while (!(start.equals("n") || start.equals("s")) ||start.equals("i")) {
-                System.out.println("Invalid input try again.");
-                start = scan.nextLine().toLowerCase();
-            }
-        }
+    public void initializeSavedGame() {
+        Setup();
+        saveFile = saveFileSelect();
+        GameFiles.readSaveArrayFile(saveFile);
+        saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level);
 
-        // Handle the selected game option
-        switch (start) {
-            case "n":
-                Coin.setPoints(0); // Reset points for a new game
-                Game.SetPostion(NewRow, NewCol); // Set player position
-                Coin.generateCoins(); // Generate initial coins
-                Mons.setMonsterPosition(); // Set monster positions
-                Game.printArray(); // Print the initial game grid
+        SwingUtilities.invokeLater(() -> {
+            gameGUI = new GUI(Game, this);
+            gameGUI.updateGrid();           // Display loaded grid in GUI
+        });
+    }
+
+    public void loadSavedGame(int slot) {
+    Setup();
+    saveFile = slot;  // Set selected save slot
+    GameFiles.readSaveArrayFile(saveFile);  // Load the save data
+    saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level);
+
+    SwingUtilities.invokeLater(() -> {
+        gameGUI = new GUI(Game, this);
+        gameGUI.updateGrid();  // Display loaded grid in GUI
+    });
+}
+    
+    public void processCommand(char input) {
+        // Process input for movement or ability use
+        
+        switch (input) {
+            
+            case 'w':
+                Coin.checkCoins('w');
+                Game.moveUp();
+                Mons.moveMonster();
+                System.out.println("a key has been detected");
                 break;
-            case "s":
-                saveSelected = true;
-                saveFile = saveFileSelect(); // Select save file
-                GameFiles.readSaveArrayFile(saveFile); // Load saved game state
-                saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level); // Setup loaded state
-                Game.printArray(); // Print the loaded game grid
+            case 's':
+                Coin.checkCoins('s');
+                Game.moveDown();
+                Mons.moveMonster();
                 break;
-        }
-
-        // Main game loop
-        while (true) {
-            System.out.println("Use arrow keys (WASD) to move '@' or 'q' to quit Then press Enter to confirm:");
-            char input = scan.next().charAt(0);
-
-            // Handle user input for movement and abilities
-            switch (input) {
-                case 'w': // Move up
-                    Coin.checkCoins('w'); // Check for coins
-                    Game.moveUp(); // Move player
-                    Mons.moveMonster(); // Move monsters
-                    break;
-                case 's': // Move down
-                    Coin.checkCoins('s'); // Check for coins
-                    Game.moveDown(); // Move player
-                    Mons.moveMonster(); // Move monsters
-                    break;
-                case 'a': // Move left
-                    Coin.checkCoins('a'); // Check for coins
-                    Game.moveLeft(); // Move player
-                    Mons.moveMonster(); // Move monsters
-                    break;
-                case 'd': // Move right
-                    Coin.checkCoins('d'); // Check for coins
-                    Game.moveRight(); // Move player
-                    Mons.moveMonster(); // Move monsters
-                    break;
-                case 'q': // Quit game
-                    System.out.println("Exiting...");
-                    leave = true;
-                    break;
-                default:
-                    // Handle special abilities or invalid input
-                    if (input == 'f' || input == 'g' || input == 'c') {
-                        Ability.sendAbilityCommand(input);
-                    } else {
-                        System.out.println("Invalid input. Use WASD keys.");
-                    }
-                    break;
-            }
-
-            if (leave) {
+            case 'a':
+                Coin.checkCoins('a');
+                Game.moveLeft();
+                Mons.moveMonster();
                 break;
-            }
-
-            // Display game status and update
-            System.out.println("Points : " + Coin.getPoints() + "  Level: " + Level.getLevels() + "  Moves: " + Game.getMovesCount());
-            System.out.println("Frozen (F) unused : " + Ability.getFrozenUses() + " Confused (C) unused : " + Ability.getConfusedUses() + " Intimidated (G) unused : " + Ability.getIntimidatedUses());
-            Level.CheckLevel(); // Check and update level
-            Game.MovesCount++; // Increment move count
-            Game.printArray(); // Print updated game grid
-        }
-
-        // Handle save or delete action
-        System.out.println("Save (S)\nDelete (D)");
-        char SaveData = scan.next().charAt(0);
-
-        switch (SaveData) {
-            case 's': // Save game state
-                if (saveSelected) {
-                    GameFiles.readSaveArrayFile(saveFile); // Load existing save file
-                    saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level); // Update save data
-                    GameFiles.writeSave(saveFile); // Write updated save file
-                    saveSelected = false; // Reset save selection flag
-                } else {
-                    saveFile = saveFileSelect(); // Select save file
-                    GameFiles.readSaveArrayFile(saveFile); // Load selected save file
-                    saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level); // Update save data
-                    GameFiles.writeSave(saveFile); // Write updated save file
-                }
-                System.out.println("Data has been Saved.");
+            case 'd':
+                Coin.checkCoins('d');
+                Game.moveRight();
+                Mons.moveMonster();
                 break;
-            case 'd': // Delete game data
-                System.out.println("Data deleted.");
+            case 'f':
+            case 'g':
+            case 'c':
+                Ability.sendAbilityCommand(input);
+                break;
+            case 'q':
+                System.exit(0);
                 break;
             default:
-                System.out.println("Invalid input.");
+                System.out.println("Invalid input. Use WASD keys.");
                 break;
         }
+
+        // Move monster after player's action
+        Mons.moveMonster();
+
+        // Check if the monster has caught the player
+        if (Mons.getMonsCurrentRow() == Game.getCurrentRow() && Mons.getMonsCurrentCol() == Game.getCurrentCol()) {
+            System.out.println("The monster has caught you!");
+            System.exit(0); // End game
+        }
+
+        // Update the GUI to reflect changes in game state
+        Level.CheckLevel(); // Check and update level
+        Game.MovesCount++; // Increment move count
+        Game.printArray(); // Print updated game grid
+        gameGUI.updateGrid();
     }
 
     /**
      * Prompts the user to select a save file.
+     *
      * @return The selected save file number.
      */
     public static int saveFileSelect() {
@@ -210,7 +188,9 @@ public class ProgramConstructionRPG {
     }
 
     /**
-     * Prompts the user to select a game option (new game, saved game, or instructions).
+     * Prompts the user to select a game option (new game, saved game, or
+     * instructions).
+     *
      * @return The selected game option.
      */
     public static String gameSetSelect() {
@@ -222,9 +202,10 @@ public class ProgramConstructionRPG {
         }
         return value;
     }
-   
+
     /**
      * Sets up the game state from the loaded file data.
+     *
      * @param GameFiles The file manager object.
      * @param Game The movement manager object.
      * @param Coin The coins manager object.
@@ -250,6 +231,7 @@ public class ProgramConstructionRPG {
 
     /**
      * Prepares game data to be saved into a file.
+     *
      * @param GameFiles The file manager object.
      * @param Game The movement manager object.
      * @param Coin The coins manager object.
@@ -270,6 +252,4 @@ public class ProgramConstructionRPG {
         GameFiles.setSavedMonsCurrentCol(Mons.getMonsCurrentCol());
         GameFiles.saveCoins(Game);
     }
-
 }
-
