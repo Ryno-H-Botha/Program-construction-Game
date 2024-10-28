@@ -9,5 +9,8 @@ package program.construction.rpg;
  * @author rynob
  */
 public class Database_Setup {
+    // user Name = user1
+    //password = 123
+    
     
 }
