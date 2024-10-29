@@ -62,6 +62,7 @@ public class Movement extends Inialize_array {
 
     /**
      * Gets the count of moves made by the player.
+     *
      * @return The number of moves made.
      */
     public int getMovesCount() {
@@ -70,10 +71,15 @@ public class Movement extends Inialize_array {
 
     /**
      * Sets the count of moves made by the player.
+     *
      * @param MovesCount The new number of moves.
      */
     public void setMovesCount(int MovesCount) {
         this.MovesCount = MovesCount;
     }
-}
 
+    public char[][] getArray() {
+        return array; // Ensure this returns the updated array
+    }
+
+}
