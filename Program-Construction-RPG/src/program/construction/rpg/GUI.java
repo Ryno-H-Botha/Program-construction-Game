@@ -10,10 +10,6 @@ package program.construction.rpg;
  */
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -27,11 +23,11 @@ public class GUI extends JFrame {
 
     public GUI(Movement game, ProgramConstructionRPG gameInstance) {
         this.game = game;
-        this.gameFrameWork = gameFrameWork; // Store reference to ProgramConstructionRPG
+        this.gameFrameWork = gameInstance;
         gridCells = new JLabel[ProgramConstructionRPG.ROWS][ProgramConstructionRPG.COLS];
 
         // Set up the main frame
-        setTitle("RPG Game");
+        setTitle("Coin Hauler");
         setSize(1600, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -40,20 +36,24 @@ public class GUI extends JFrame {
         // Create the grid panel with black background
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(ProgramConstructionRPG.ROWS, ProgramConstructionRPG.COLS));
-        gridPanel.setBackground(Color.BLACK); // Set background to black
+        gridPanel.setOpaque(false); // Make gridPanel transparent to show background
 
-        // Initialize grid cells with black background
+        // Initialize grid cells
         for (int row = 0; row < ProgramConstructionRPG.ROWS; row++) {
             for (int col = 0; col < ProgramConstructionRPG.COLS; col++) {
                 gridCells[row][col] = new JLabel();
                 gridCells[row][col].setHorizontalAlignment(SwingConstants.CENTER);
                 gridCells[row][col].setVerticalAlignment(SwingConstants.CENTER);
-                gridCells[row][col].setOpaque(true); // Make the label opaque to see background color
-                gridCells[row][col].setBackground(Color.BLACK); // Set cell background to black
-                gridCells[row][col].setForeground(Color.WHITE); // Set text color to white for visibility
+                gridCells[row][col].setOpaque(false); // Make the label opaque
+                gridCells[row][col].setForeground(Color.WHITE); // Set text color to white
                 gridPanel.add(gridCells[row][col]);
             }
         }
+
+        // Create the background panel with the image
+        BackgroundPanel backgroundPanel = new BackgroundPanel(); // Assuming BackgroundPanel handles image loading
+        backgroundPanel.setLayout(new BorderLayout());
+        backgroundPanel.add(gridPanel, BorderLayout.CENTER); // Add gridPanel to backgroundPanel
 
         // Add KeyListener to the gridPanel for capturing player actions
         gridPanel.addKeyListener(new KeyAdapter() {
@@ -77,22 +77,22 @@ public class GUI extends JFrame {
             }
         });
 
-        // Ensure gridPanel is focusable and has focus for key events
+         // Ensure gridPanel is focusable and has focus for key events
         gridPanel.setFocusable(true);
         gridPanel.requestFocusInWindow();
 
-        // Add the grid panel to the frame
-        add(gridPanel, BorderLayout.CENTER);
+        // Add the background panel to the frame
+        add(backgroundPanel, BorderLayout.CENTER);
 
         // Start the timer to update the grid periodically
-        timer = new Timer(100, e -> updateGrid());
+        timer = new Timer(100, e -> updateGrid(50));
         timer.start();
 
         setVisible(true);
     }
 
     // Method to update the grid based on the game state
-    public void updateGrid() {
+    public void updateGrid(int fontSize) {
         // Access the current game array directly from the Movement instance
         char[][] array = game.getArray(); // Use the game instance reference
 
@@ -123,6 +123,7 @@ public class GUI extends JFrame {
                         cell.setText("");  // Default case for any unexpected characters
                         break;
                 }
+                cell.setFont(new Font("Arial", Font.BOLD, fontSize));
             }
         }
 

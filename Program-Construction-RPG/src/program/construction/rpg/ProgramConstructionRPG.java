@@ -27,6 +27,7 @@ public class ProgramConstructionRPG {
     private static Levels Level;
     private static Abilities Ability;
     private static Database_Setup DBase;
+    private static GameSaveScreen GSS;
     private GUI gameGUI;
 
     // Flag to determine when to exit the game loop
@@ -43,7 +44,7 @@ public class ProgramConstructionRPG {
 
     // File for saving game state
     private static int saveFile;
-    private static String saveName ;
+    private static String saveName;
     private static boolean saveSelected = false;
 
     // Sets of valid inputs for save and game options
@@ -76,8 +77,6 @@ public class ProgramConstructionRPG {
         Level = new Levels(Game, Coin, Mons, Ability);
         leave = false;
         DBase = new Database_Setup();
-
-
     }
 
     public void initializeNewGame() {
@@ -90,47 +89,47 @@ public class ProgramConstructionRPG {
         SwingUtilities.invokeLater(() -> {
             gameGUI = new GUI(Game, this);
             if (gameGUI != null) {
-            gameGUI.updateGrid();}
+                gameGUI.updateGrid(50);
+            }
         });
     }
 
     public void initializeSavedGame() {
         Setup();
-       
-        saveFile = saveFileSelect();
-        
 
-        saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level,DBase);
+        saveFile = saveFileSelect();
+
+        saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level, DBase);
 
         SwingUtilities.invokeLater(() -> {
             gameGUI = new GUI(Game, this);
             if (gameGUI != null) {
-            gameGUI.updateGrid()
-                    ;}
+                gameGUI.updateGrid(50);
+            }
         });
     }
 
     public void loadSavedGame(int slot) {
-    Setup();
-    
-    saveFile = slot;  // Set selected save slot
-    saveName = "Save_"+saveFile;
+        Setup();
 
-    saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level,DBase);
+        saveFile = slot;  // Set selected save slot
+        saveName = "Save_" + saveFile;
 
-    SwingUtilities.invokeLater(() -> {
-        gameGUI = new GUI(Game, this);
-        if (gameGUI != null) {
-        gameGUI.updateGrid();
-         }
-    });
-}
-    
+        saveReadSetup(GameFiles, Game, Coin, Mons, Ability, Level, DBase);
+
+        SwingUtilities.invokeLater(() -> {
+            gameGUI = new GUI(Game, this);
+            if (gameGUI != null) {
+                gameGUI.updateGrid(50);
+            }
+        });
+    }
+
     public void processCommand(char input) {
         // Process input for movement or ability use
-        
+
         switch (input) {
-            
+
             case 'w':
                 Coin.checkCoins('w');
                 Game.moveUp();
@@ -171,14 +170,20 @@ public class ProgramConstructionRPG {
         // Check if the monster has caught the player
         if (Mons.getMonsCurrentRow() == Game.getCurrentRow() && Mons.getMonsCurrentCol() == Game.getCurrentCol()) {
             System.out.println("The monster has caught you!");
-            System.exit(0); // End game
+
+            // Open the GameSaveScreen without closing the main window
+        SwingUtilities.invokeLater(() -> {
+            DoOrDontSaveScreen saveScreen = new DoOrDontSaveScreen(this);
+            saveScreen.setVisible(true);
+            gameGUI.dispose();
+        });
         }
 
         // Update the GUI to reflect changes in game state
         Level.CheckLevel(); // Check and update level
         Game.MovesCount++; // Increment move count
         Game.printArray(); // Print updated game grid
-        gameGUI.updateGrid();
+        gameGUI.updateGrid(50);
     }
 
     /**
@@ -187,7 +192,7 @@ public class ProgramConstructionRPG {
      * @return The selected save file number.
      */
     public static int saveFileSelect() {
-        Setup() ;
+        Setup();
         String value = "";
         System.out.println("Which file would you like to use?\nSave (1)\nSave (2)\nSave (3)");
         while (value.isEmpty()) {
@@ -209,7 +214,7 @@ public class ProgramConstructionRPG {
      * @return The selected game option.
      */
     public static String gameSetSelect() {
-        Setup() ;
+        Setup();
         System.out.println("New game     (N) \nSaved Game   (S) \nInstructions (I)");
         String value = scan.nextLine().trim().toLowerCase();
         while (!validOptionsGameSets.contains(value)) {
@@ -218,7 +223,13 @@ public class ProgramConstructionRPG {
         }
         return value;
     }
-
+    
+    public void saveGame(int slot) throws SQLException {
+        ProgramConstructionRPG.Setup();
+                saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level, DBase);
+        GSS.dispose();
+    }
+    
     /**
      * Sets up the game state from the loaded file data.
      *
@@ -230,23 +241,22 @@ public class ProgramConstructionRPG {
      * @param Level The level manager object.
      * @param DBase the Database_Setup object
      */
-    public static void saveReadSetup(Dbase_Save_Files GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level,Database_Setup DBase) {
+    public static void saveReadSetup(Dbase_Save_Files GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level, Database_Setup DBase) {
 
-        
-        int SavedRow = DBase.getValue(saveName,"Row");
+        int SavedRow = DBase.getValue(saveName, "Row");
         System.out.println("Retrieved Row from DB: " + SavedRow);
-        int SavedCol = DBase.getValue(saveName,"Col");
+        int SavedCol = DBase.getValue(saveName, "Col");
         System.out.println("Retrieved Col  from DB: " + SavedCol);
-        Coin.setPoints(DBase.getValue(saveName,"Points"));
-        Level.setLevels(DBase.getValue(saveName,"Levels"));
-        Game.setMovesCount(DBase.getValue(saveName,"MovesCount"));
-        Ability.setFrozenUses(DBase.getValue(saveName,"FrozenUses"));
-        Ability.setConfusedUses(DBase.getValue(saveName,"ConfusedUses"));
-        Ability.setIntimidatedUses(DBase.getValue(saveName,"IntimidatedUses"));
-        Mons.setMonsCurrentRow(DBase.getValue(saveName,"MonsCurrentRow"));
-        Mons.setMonsCurrentCol(DBase.getValue(saveName,"MonsCurrentCol"));
+        Coin.setPoints(DBase.getValue(saveName, "Points"));
+        Level.setLevels(DBase.getValue(saveName, "Levels"));
+        Game.setMovesCount(DBase.getValue(saveName, "MovesCount"));
+        Ability.setFrozenUses(DBase.getValue(saveName, "FrozenUses"));
+        Ability.setConfusedUses(DBase.getValue(saveName, "ConfusedUses"));
+        Ability.setIntimidatedUses(DBase.getValue(saveName, "IntimidatedUses"));
+        Mons.setMonsCurrentRow(DBase.getValue(saveName, "MonsCurrentRow"));
+        Mons.setMonsCurrentCol(DBase.getValue(saveName, "MonsCurrentCol"));
         Game.SetPostion(SavedRow, SavedCol);
-        GameFiles.setArrayCoins(Game, Coin,saveName);
+        GameFiles.setArrayCoins(Game, Coin, saveName);
         Mons.checkMons();
     }
 
@@ -261,18 +271,18 @@ public class ProgramConstructionRPG {
      * @param Level The level manager object.
      * @param DBase the Database_Setup object
      */
-    public static void saveDataSetup(Dbase_Save_Files GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level,Database_Setup DBase) throws SQLException {
-        DBase.insertSaveData(saveName,"Row",Game.getCurrentRow());
-        DBase.insertSaveData(saveName,"Col",Game.getCurrentCol());
-        DBase.insertSaveData(saveName,"Points",Coin.getPoints());
-        DBase.insertSaveData(saveName,"Levels",Level.getLevels());
-        DBase.insertSaveData(saveName,"MovesCount",Game.getMovesCount());
-        DBase.insertSaveData(saveName,"FrozenUses",Ability.getFrozenUses());
-        DBase.insertSaveData(saveName,"ConfusedUses",Ability.getConfusedUses());
-        DBase.insertSaveData(saveName,"IntimidatedUses",Ability.getIntimidatedUses());    
-        DBase.insertSaveData(saveName,"MonsCurrentRow", Mons.getMonsCurrentRow());       
-        DBase.insertSaveData(saveName,"MonsCurrentCol",Mons.getMonsCurrentCol());
-        GameFiles.saveCoins(Game,saveName);
-        
+    public static void saveDataSetup(Dbase_Save_Files GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level, Database_Setup DBase) throws SQLException {
+        DBase.insertSaveData(saveName, "Row", Game.getCurrentRow());
+        DBase.insertSaveData(saveName, "Col", Game.getCurrentCol());
+        DBase.insertSaveData(saveName, "Points", Coin.getPoints());
+        DBase.insertSaveData(saveName, "Levels", Level.getLevels());
+        DBase.insertSaveData(saveName, "MovesCount", Game.getMovesCount());
+        DBase.insertSaveData(saveName, "FrozenUses", Ability.getFrozenUses());
+        DBase.insertSaveData(saveName, "ConfusedUses", Ability.getConfusedUses());
+        DBase.insertSaveData(saveName, "IntimidatedUses", Ability.getIntimidatedUses());
+        DBase.insertSaveData(saveName, "MonsCurrentRow", Mons.getMonsCurrentRow());
+        DBase.insertSaveData(saveName, "MonsCurrentCol", Mons.getMonsCurrentCol());
+        GameFiles.saveCoins(Game, saveName);
+
     }
 }
