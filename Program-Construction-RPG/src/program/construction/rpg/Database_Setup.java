@@ -81,7 +81,7 @@ public void initializeDataBase() {
                 if (parts.length == 2) {
                     String key = parts[0];
                     int value = Integer.parseInt(parts[1]);
-                    insertSaveData(saveName.toUpperCase(), key.toUpperCase(), value);
+                    insertSaveData(saveName, key, value);
                 }
             }
         } catch (IOException | SQLException e) {
@@ -94,15 +94,15 @@ public void initializeDataBase() {
       // First, delete existing data for the given saveName and key
     String deleteSQL = "DELETE FROM SAVEDATA WHERE save_name = ? AND key_name = ?";
     try (PreparedStatement deleteStatement = connection.prepareStatement(deleteSQL)) {
-        deleteStatement.setString(1, saveName);
-        deleteStatement.setString(2, key);
+        deleteStatement.setString(1, saveName.toUpperCase());
+        deleteStatement.setString(2, key.toUpperCase());
         deleteStatement.executeUpdate();
     }
     // Now, insert the new data
     String insertSQL = "INSERT INTO SAVEDATA (save_name, key_name, value) VALUES (?, ?, ?)";
     try (PreparedStatement preparedStatement = connection.prepareStatement(insertSQL)) {
-        preparedStatement.setString(1, saveName);
-        preparedStatement.setString(2, key);
+        preparedStatement.setString(1, saveName.toUpperCase());
+        preparedStatement.setString(2, key.toUpperCase());
         preparedStatement.setInt(3, value);
         preparedStatement.executeUpdate();
     }

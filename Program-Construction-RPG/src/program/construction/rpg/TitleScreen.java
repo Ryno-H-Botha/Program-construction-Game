@@ -14,80 +14,67 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class TitleScreen extends JFrame {
-    
+
+
     public TitleScreen() {
         // Set up the frame
-        setTitle("RPG Game Title Screen");
+        setTitle("Coin Hauler");
         setSize(1600, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window
 
-        // Create a panel for the buttons
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout()); // Use GridBagLayout for centering
-        panel.setBackground(Color.DARK_GRAY);
+        // Use BackgroundPanel with the path to your custom image
+        BackgroundPanel panel = new BackgroundPanel();
+        panel.setLayout(new GridBagLayout()); // Layout for centering buttons
 
-        // Create GridBagConstraints for centering
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0; // Column
-        gbc.gridy = 0; // Row
-        gbc.insets = new Insets(20, 20, 20, 20); // Padding around buttons
-        gbc.anchor = GridBagConstraints.CENTER; // Center alignment
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(20, 20, 20, 20);
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        // Create buttons
-        JButton newGameButton = new JButton("New Game");
-        JButton savedGameButton = new JButton("Load Saved Game");
-        JButton instructionsButton = new JButton("Instructions");
+        JButton newGameButton = new RoundedButton("New Game", 30);
+        JButton savedGameButton = new RoundedButton("Load Saved Game", 30);
+        JButton instructionsButton = new RoundedButton("Instructions", 30);
+        JButton quit = new RoundedButton("Quit", 30);
 
-        // Set the font of the buttons to bold
-        Font originalFont = newGameButton.getFont();
-        Font boldFont = originalFont.deriveFont(Font.BOLD, 20); // Use 14-point bold font
+        Font boldFont = newGameButton.getFont().deriveFont(Font.BOLD, 20);
         newGameButton.setFont(boldFont);
         savedGameButton.setFont(boldFont);
         instructionsButton.setFont(boldFont);
+        quit.setFont(boldFont);
 
         // Set text color and background of the buttons
         newGameButton.setForeground(Color.WHITE);
         savedGameButton.setForeground(Color.WHITE);
         instructionsButton.setForeground(Color.WHITE);
+        quit.setForeground(Color.WHITE);
 
         newGameButton.setBackground(Color.RED);
         savedGameButton.setBackground(Color.RED);
         instructionsButton.setBackground(Color.RED);
+        quit.setBackground(Color.RED);
 
         // Set preferred size for buttons
         newGameButton.setPreferredSize(new Dimension(250, 80));
         savedGameButton.setPreferredSize(new Dimension(250, 80));
         instructionsButton.setPreferredSize(new Dimension(250, 80));
+        quit.setPreferredSize(new Dimension(180, 80));
 
         // Add action listeners to buttons
-        newGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                startNewGame();
-            }
-        });
-
-        savedGameButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadSavedGame();
-            }
-        });
-
-        instructionsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showInstructions();
-            }
-        });
-
+        newGameButton.addActionListener(e -> startNewGame());
+        savedGameButton.addActionListener(e -> loadSavedGame());
+        instructionsButton.addActionListener(e -> showInstructions());
+        quit.addActionListener(e -> dispose());
+        
         // Add buttons to the panel using GridBagConstraints
         panel.add(newGameButton, gbc);
         gbc.gridy++; // Move to the next row for the next button
         panel.add(savedGameButton, gbc);
         gbc.gridy++; // Move to the next row for the next button
         panel.add(instructionsButton, gbc);
+        gbc.gridy++; // Move to the next row for the next button
+        panel.add(quit, gbc);
 
         // Add the panel to the frame
         add(panel);
@@ -141,7 +128,6 @@ public class TitleScreen extends JFrame {
 
     public static void main(String[] args) {
         // Create and show the title screen
-
         SwingUtilities.invokeLater(() -> new TitleScreen());
     }
 }

@@ -10,6 +10,7 @@ package program.construction.rpg;
  */
 import java.util.*;
 import java.io.*;
+import javax.swing.SwingUtilities;
 import program.construction.rpg.Inialize_array;
 
 public class MonsterMovement {
@@ -24,10 +25,13 @@ public class MonsterMovement {
     private int rowDifference; // Row difference between the monster and player
     private int colDifference; // Column difference between the monster and player
     private boolean WasCoin; // Flag to check if the monster was on a coin position
+    private static GameSaveScreen safeScr;
 
     /**
      * Constructor for the MonsterMovement class.
-     * @param Game The Movement object to access the game grid and player position.
+     *
+     * @param Game The Movement object to access the game grid and player
+     * position.
      */
     public MonsterMovement(Movement Game) {
         this.Game = Game;
@@ -37,7 +41,8 @@ public class MonsterMovement {
     }
 
     /**
-     * Sets a new position for the monster ensuring it doesn't spawn near the player.
+     * Sets a new position for the monster ensuring it doesn't spawn near the
+     * player.
      */
     public void setMonsterPosition() {
         int newCol;
@@ -56,7 +61,8 @@ public class MonsterMovement {
     }
 
     /**
-     * Moves the monster based on its status (frozen, confused, intimidated) or defaults to normal movement.
+     * Moves the monster based on its status (frozen, confused, intimidated) or
+     * defaults to normal movement.
      */
     public void moveMonster() {
         int turnsRemaining = 0;
@@ -113,11 +119,7 @@ public class MonsterMovement {
     /**
      * Checks the monster's position to determine if it has caught the player.
      */
-    public void checkMons() {
-        if (MonsCurrentRow == playerRow && MonsCurrentCol == playerCol) {
-            System.out.println("Game Over! The monster caught the player!");
-            System.exit(0); // End the game
-        }
+    public void checkMons() {       
         // Check if the new position contains a coin or if it's out of bounds before placing the monster
         if (Game.array[MonsCurrentRow][MonsCurrentCol] == 'C') {
             WasCoin = true;

@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.*;
+import java.io.PrintWriter;
 import java.io.*;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
@@ -34,22 +35,11 @@ public class Dbase_Save_Files extends Database_Setup{
     public static int SavedMonsCurrentCol;
     public static int CoinCount = 0;
 
-    public static HashMap<String, Integer> PlayerInfo = new HashMap<>();
-
-    public void writeSave(int Save) {
-        try {
-            String FileName = SetSaveFile(Save);
-            PrintWriter OutScores = new PrintWriter(new FileOutputStream(FileName));  //file write/genarator
-            Set eSet = PlayerInfo.entrySet();
-            Iterator it = eSet.iterator();
-            while (it.hasNext()) {
-                OutScores.println(it.next());
-            }
-            OutScores.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Error writeing from file ");
-        }
+   public Dbase_Save_Files() {
+        super(); // Calls the constructor of Database_Setup to establish the connection
     }
+
+
 //
 //    public static void readInstArrayFile() {
 //        try {
@@ -76,46 +66,76 @@ public class Dbase_Save_Files extends Database_Setup{
               
 
     public void saveCoins(Movement game,String saveName) throws SQLException {
+        CoinCount = 0;
         for (int i = 0; i < game.ROWS; i++) {
             for (int j = 0; j < game.COLS; j++) {
+                game.printArray();
+                System.out.println("hi");
                 char value = game.array[i][j];
-                if (value == 'C') {
+                System.out.println(game.array[i][j]);
+                if (value == 'C'||value == 'c') {
                     CoinCount++;
                     String R = "Coin" + CoinCount + "Row";
                     String C = "Coin" + CoinCount + "Col";
+                    System.out.println("values found Row = "+R+" Col = "+C);
                     insertSaveData(saveName,R, i);
                     insertSaveData(saveName,C,j);
-                    PlayerInfo.put(C, j);
                 }
 
             }
             System.out.println();
         }
-        PlayerInfo.put("CoinCount", CoinCount);
+        insertSaveData(saveName,"CoinCount",CoinCount);
     }
-    // Method to save database data to a specified save.txt file
-    public void saveDatabaseToFile() {
-        try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
-            String querySQL = "SELECT key_name, value FROM SaveData WHERE save_name = ?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(querySQL)) {
-                preparedStatement.setString(1, saveName);
-                ResultSet resultSet = preparedStatement.executeQuery();
 
-                while (resultSet.next()) {
-                    String key = resultSet.getString("key_name");
-                    int value = resultSet.getInt("value");
-                    writer.println(key + "=" + value);
-                }
-                System.out.println("Data saved to " + filePath + " successfully.");
-            } catch (SQLException e) {
-                System.out.println("Error querying database for save data.");
-                e.printStackTrace();
+public void saveDatabaseToFile(int saveValue) {
+    // Set the file path based on the provided saveValue
+    filePath = SetSaveFile(saveValue);
+    saveName = "save_" + saveValue;
+    HashMap<String, Integer> resultMap = getDatabaseValuesAsMap();
+    writeSave(resultMap);
+}
+
+    public void writeSave(HashMap<String, Integer> resultMap) {
+        try {
+            
+            PrintWriter OutScores = new PrintWriter(new FileOutputStream(filePath));  //file write/genarator
+            Set eSet = resultMap.entrySet();
+            Iterator it = eSet.iterator();
+            while (it.hasNext()) {
+                OutScores.println(it.next());
             }
-        } catch (IOException e) {
-            System.out.println("Error writing to save file.");
-            e.printStackTrace();
+            OutScores.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Error writeing from file ");
         }
     }
+
+public HashMap<String, Integer> getDatabaseValuesAsMap() {
+    String query = "SELECT key_name, value FROM SAVEDATA"; // Adjust the query if needed
+    HashMap<String, Integer> resultMap = new HashMap<>();
+
+    // Use try-with-resources for automatic resource management
+    try (PreparedStatement preparedStatement = connection.prepareStatement(query,
+            ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+         ResultSet resultSet = preparedStatement.executeQuery()) {
+
+        // Iterate through the ResultSet and populate the HashMap
+        while (resultSet.next()) {
+            String keyName = resultSet.getString("key_name");
+            int value = resultSet.getInt("value");
+            resultMap.put(keyName, value); // Add the key-value pair to the HashMap
+        }
+
+        System.out.println("Data retrieved from the database and stored in HashMap successfully.");
+    } catch (SQLException e) {
+        System.out.println("Database error: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    return resultMap; // Return the populated HashMap
+}
+    
     
     
     public void setArrayCoins(Movement game, Coins cn,String saveName) {

@@ -26,7 +26,7 @@ public class Abilities {
      */
     public static void freeze() {
         isFrozen = true;
-        frozenTurns = 3; // Monster is frozen for 3 turns
+        frozenTurns = 4; // Monster is frozen for 3 turns
     }
 
     /**
@@ -34,7 +34,7 @@ public class Abilities {
      */
     public static void intimidation() {
         isIntimidated = true;
-        intimidatedTurns = 2; // Monster is intimidated for 2 turns
+        intimidatedTurns = 3; // Monster is intimidated for 2 turns
     }
 
     /**
@@ -42,7 +42,7 @@ public class Abilities {
      */
     public static void confusion() {
         isConfused = true;
-        confusedTurns = 3; // Monster is confused for 3 turns
+        confusedTurns = 4; // Monster is confused for 3 turns
     }
 
     /**
