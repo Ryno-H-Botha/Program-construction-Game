@@ -101,6 +101,8 @@ public class GameSaveScreen extends JFrame {
         // Action listeners for loading each slot
         slot1Button.addActionListener(e -> {
             try {
+                dispose();
+                new TitleScreen(false);
                 gameInstance.saveGame(Game,1);
             } catch (SQLException ex) {
                 Logger.getLogger(GameSaveScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -108,6 +110,8 @@ public class GameSaveScreen extends JFrame {
         });
         slot2Button.addActionListener(e -> {
             try {
+                dispose();
+                new TitleScreen(false);
                 gameInstance.saveGame(Game,2);
             } catch (SQLException ex) {
                 Logger.getLogger(GameSaveScreen.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,12 +119,17 @@ public class GameSaveScreen extends JFrame {
         });
         slot3Button.addActionListener(e -> {
             try {
+                dispose();
+                new TitleScreen(false);
                 gameInstance.saveGame(Game,3);
             } catch (SQLException ex) {
                 Logger.getLogger(GameSaveScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-        slot4Button.addActionListener(e -> dispose());
+        slot4Button.addActionListener(e -> {
+            dispose();
+            new TitleScreen(false);
+                });
 
         add(panel);
         setVisible(true);

@@ -15,17 +15,23 @@ import java.awt.event.ActionListener;
 
 public class TitleScreen extends JFrame {
 
+    private GUI gameGUI;
 
-    public TitleScreen() {
+    public boolean death;
+
+    public TitleScreen(boolean death) {
+        this.death = death;
+
+
+        // Use BackgroundPanel with the path to your custom image
+        BackgroundPanel panel = new BackgroundPanel();
+        panel.setLayout(new GridBagLayout()); // Layout for centering buttons
+
         // Set up the frame
         setTitle("Coin Hauler");
         setSize(1600, 900);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the window
-
-        // Use BackgroundPanel with the path to your custom image
-        BackgroundPanel panel = new BackgroundPanel();
-        panel.setLayout(new GridBagLayout()); // Layout for centering buttons
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -60,13 +66,17 @@ public class TitleScreen extends JFrame {
         savedGameButton.setPreferredSize(new Dimension(250, 80));
         instructionsButton.setPreferredSize(new Dimension(250, 80));
         quit.setPreferredSize(new Dimension(180, 80));
+        
 
         // Add action listeners to buttons
         newGameButton.addActionListener(e -> startNewGame());
         savedGameButton.addActionListener(e -> loadSavedGame());
         instructionsButton.addActionListener(e -> showInstructions());
-        quit.addActionListener(e -> dispose());
-        
+        quit.addActionListener(e -> {
+            dispose();
+            System.exit(0);
+        });
+
         // Add buttons to the panel using GridBagConstraints
         panel.add(newGameButton, gbc);
         gbc.gridy++; // Move to the next row for the next button
@@ -81,6 +91,10 @@ public class TitleScreen extends JFrame {
 
         // Make the frame visible
         setVisible(true);
+        
+        if (this.death == true) {
+            deathMesage();
+        }
     }
 
     private void startNewGame() {
@@ -91,8 +105,15 @@ public class TitleScreen extends JFrame {
         dispose(); // Close the title screen
     }
 
-    private void loadSavedGame() {
+    private void deathMesage() {
+        JOptionPane.showMessageDialog(this,
+                "You have been cought by the monster better luck next time i guess???",
+                "Message from above",
+                JOptionPane.INFORMATION_MESSAGE);
+        death = false;
+    }
 
+    private void loadSavedGame() {
         System.out.println("Opening Load Game Screen...");
         new LoadGameScreen(new ProgramConstructionRPG());
         dispose();  // Close the title screen
@@ -124,10 +145,5 @@ public class TitleScreen extends JFrame {
                 + "\nPress Q to quit the game.",
                 "Instructions",
                 JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public static void main(String[] args) {
-        // Create and show the title screen
-        SwingUtilities.invokeLater(() -> new TitleScreen());
     }
 }

@@ -90,7 +90,10 @@ public class DoOrDontSaveScreen extends JFrame {
                 });
             }
         });
-        slot2Button.addActionListener(e -> dispose());
+        slot2Button.addActionListener(e -> {
+            TitleScreen titleScreen = new TitleScreen(false);
+            dispose();
+                });
 
         add(panel);
         setVisible(true);

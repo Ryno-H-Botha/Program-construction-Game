@@ -96,7 +96,7 @@ public class LoadGameScreen extends JFrame {
         slot4Button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new TitleScreen();
+                new TitleScreen(false);
                 dispose();
             }
         });

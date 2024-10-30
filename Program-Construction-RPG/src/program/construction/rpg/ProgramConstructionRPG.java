@@ -28,6 +28,7 @@ public class ProgramConstructionRPG {
     private static Abilities Ability;
     private static Database_Setup DBase;
     private static GameSaveScreen GSS;
+    private static TitleScreen TS;
     private GUI gameGUI;
 
     // Flag to determine when to exit the game loop
@@ -77,6 +78,11 @@ public class ProgramConstructionRPG {
         Level = new Levels(Game, Coin, Mons, Ability);
         leave = false;
         DBase = new Database_Setup();
+    }
+
+    public static void main(String[] args) {
+        // Create and show the title screen
+        SwingUtilities.invokeLater(() -> new TitleScreen(false));
     }
 
     public void initializeNewGame() {
@@ -157,31 +163,30 @@ public class ProgramConstructionRPG {
                 Ability.sendAbilityCommand(input);
                 break;
             case 'q':
-                System.exit(0);
+                SwingUtilities.invokeLater(() -> {
+                    DoOrDontSaveScreen saveScreen = new DoOrDontSaveScreen(this, Game);
+                    saveScreen.setVisible(true);
+                    gameGUI.dispose();
+                });
                 break;
             default:
                 System.out.println("Invalid input. Use WASD keys.");
                 break;
         }
 
-        // Move monster after player's action
-        Mons.moveMonster();
-
         // Check if the monster has caught the player
         if (Mons.getMonsCurrentRow() == Game.getCurrentRow() && Mons.getMonsCurrentCol() == Game.getCurrentCol()) {
-            System.out.println("The monster has caught you!");
-
-            // Open the GameSaveScreen without closing the main window
-        SwingUtilities.invokeLater(() -> {
-            DoOrDontSaveScreen saveScreen = new DoOrDontSaveScreen(this,Game);
-            saveScreen.setVisible(true);
+            // Open the Title meny without closing the main window
+            SwingUtilities.invokeLater(() -> {
+                TitleScreen titleScreen = new TitleScreen(true);
+            });
             gameGUI.dispose();
-        });
         }
 
         // Update the GUI to reflect changes in game state
         Level.CheckLevel(); // Check and update level
         Game.MovesCount++; // Increment move count
+        Mons.moveMonster();
         Game.printArray(); // Print updated game grid
         gameGUI.updateGrid(50);
     }
@@ -223,13 +228,13 @@ public class ProgramConstructionRPG {
         }
         return value;
     }
-    
+
     public void saveGame(Movement Game, int slot) throws SQLException {
 
-                saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level, DBase,slot);
+        saveDataSetup(GameFiles, Game, Coin, Mons, Ability, Level, DBase, slot);
         GSS.dispose();
     }
-    
+
     /**
      * Sets up the game state from the loaded file data.
      *
@@ -273,10 +278,10 @@ public class ProgramConstructionRPG {
      * @param slot
      * @throws java.sql.SQLException
      */
-    public static void saveDataSetup(Dbase_Save_Files GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level, Database_Setup DBase,int slot) throws SQLException {
-        
+    public static void saveDataSetup(Dbase_Save_Files GameFiles, Movement Game, Coins Coin, MonsterMovement Mons, Abilities Ability, Levels Level, Database_Setup DBase, int slot) throws SQLException {
+
         GameFiles.saveToDatabase(slot);
-        saveName = "save_"+slot;
+        saveName = "save_" + slot;
         DBase.insertSaveData(saveName, "Row", Game.getCurrentRow());
         DBase.insertSaveData(saveName, "Col", Game.getCurrentCol());
         DBase.insertSaveData(saveName, "Points", Coin.getPoints());
